@@ -3,7 +3,7 @@ name = "apex-env"
 version = "1.0.0"
 description = "APEX Professional Tasks Environment for RL training"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     # --- environment ---
     "openenv-core>=0.1.0",
@@ -18,7 +18,7 @@ dependencies = [
     # --- training stack (pinned for compatibility) ---
     "torch==2.10.0",
     "torchvision==0.25.0",          # must match torch 2.10.0
-    "transformers==4.51.3",         # trl 0.29 requires transformers<5
+    "transformers==4.56.2",         # minimum required by trl 0.29.0, still <5
     "trl==0.29.0",
     "peft==0.15.0",
     "accelerate==1.6.0",
@@ -33,9 +33,10 @@ serve = "python main.py"
 test = "python -m pytest test/ -v"
 
 [[tool.uv.index]]
+name = "pytorch-cu128"
 url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
 [tool.uv.sources]
-torch = { index = "https://download.pytorch.org/whl/cu128" }
-torchvision = { index = "https://download.pytorch.org/whl/cu128" }
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
