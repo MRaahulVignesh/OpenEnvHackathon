@@ -2,19 +2,21 @@
 APEX Professional Tasks Environment
 
 Extends openenv.core Environment to train agents on investment banking,
-management consulting, and corporate law tasks — targeting the Mercor
-APEX-Agents benchmark.
+management consulting, and corporate law tasks.
 
-The environment:
-  - Loads 22 professional scenarios from data/
-  - Serves one scenario per episode via reset()
-  - Scores agent responses against rubrics via local vLLM judge
-  - Returns reward = fraction of rubric criteria met (0.0 – 1.0)
+Features:
+  - Difficulty progression: tracks rolling avg reward per category (last 5 episodes)
+    and escalates/de-escalates scenario difficulty accordingly
+  - Adversarial noise injection: on hard scenarios, corrupts one file with a
+    plausible but incorrect figure; rewards agent for detecting it
+  - Returns reward breakdown: base rubric score + noise detection bonus
 """
 
 import json
 import os
 import random
+import copy
+from collections import deque
 from pathlib import Path
 from typing import Optional
 from uuid import uuid4
@@ -25,13 +27,116 @@ from apex_env.server.scorer import RLScorer
 from apex_env.models import APEXAction, APEXObservation
 
 
+# ── Difficulty thresholds ──────────────────────────────────────────────────────
+# If rolling avg reward (last 5 episodes) is above ESCALATE → move up a tier
+# If below DEESCALATE → move down a tier
+ESCALATE_THRESHOLD   = 0.75
+DEESCALATE_THRESHOLD = 0.40
+TIER_ORDER           = ["easy", "medium", "hard"]
+
+
+# ── Noise injection definitions ────────────────────────────────────────────────
+# For each hard scenario: which file to corrupt, what to replace, what to inject,
+# and keywords the agent should use to flag the discrepancy.
+NOISE_INJECTIONS = {
+    # Banking
+    "bank_003": {
+        "file":          "loan_application.txt",
+        "original":      "EBITDA: $4.1M (FY2025)",
+        "injected":      "EBITDA: $8.2M (FY2025)",
+        "flag_keywords": ["ebitda discrepancy", "ebitda inconsistency", "ebitda mismatch",
+                          "conflicting ebitda", "ebitda does not match", "ebitda figure"],
+    },
+    "bank_004": {
+        "file":          "company_financials.txt" if "company_financials.txt" in [] else "company_overview.txt",
+        "original":      "Revenue",
+        "injected":      None,  # will be skipped if original not found — safe fallback
+        "flag_keywords": ["revenue discrepancy", "revenue inconsistency", "conflicting revenue"],
+    },
+    "bank_006": {
+        "file":          "debt_structure.txt",
+        "original":      "Senior",
+        "injected":      None,
+        "flag_keywords": ["debt discrepancy", "debt mismatch", "conflicting debt figures"],
+    },
+    "bank_007": {
+        "file":          "income_statement.txt",
+        "original":      "Net Income",
+        "injected":      None,
+        "flag_keywords": ["net income discrepancy", "income mismatch", "conflicting income"],
+    },
+    # Consulting
+    "consult_003": {
+        "file":          "hospital_data.txt",
+        "original":      "Occupancy rate: 94%",
+        "injected":      "Occupancy rate: 71%",
+        "flag_keywords": ["occupancy discrepancy", "occupancy mismatch", "conflicting occupancy",
+                          "occupancy rate inconsistency", "occupancy figure"],
+    },
+    "consult_005": {
+        "file":          "operations_email.txt",
+        "original":      "delay",
+        "injected":      None,
+        "flag_keywords": ["data discrepancy", "conflicting figures", "inconsistency"],
+    },
+    "consult_007": {
+        "file":          "pricing_analysis.txt",
+        "original":      "margin",
+        "injected":      None,
+        "flag_keywords": ["margin discrepancy", "pricing inconsistency", "conflicting margin"],
+    },
+    # Law
+    "law_001": {
+        "file":          "purchase_agreement_excerpt.txt",
+        "original":      "Section 8.3",
+        "injected":      None,
+        "flag_keywords": ["indemnification discrepancy", "cap mismatch", "conflicting indemnification"],
+    },
+    "law_002": {
+        "file":          "it_logs.txt",
+        "original":      "access",
+        "injected":      None,
+        "flag_keywords": ["log discrepancy", "access inconsistency", "conflicting log"],
+    },
+    "law_003": {
+        "file":          "gdpr_reference.txt",
+        "original":      "72 hours",
+        "injected":      "48 hours",
+        "flag_keywords": ["72 hours", "notification period", "gdpr discrepancy",
+                          "breach notification", "conflicting gdpr", "48 hours is incorrect"],
+    },
+    "law_004": {
+        "file":          "cap_table.txt",
+        "original":      "%",
+        "injected":      None,
+        "flag_keywords": ["cap table discrepancy", "ownership mismatch", "conflicting ownership"],
+    },
+    "law_005": {
+        "file":          "market_data.txt",
+        "original":      "market share",
+        "injected":      None,
+        "flag_keywords": ["market share discrepancy", "market data inconsistency"],
+    },
+    "law_006": {
+        "file":          "audit_findings.txt",
+        "original":      "finding",
+        "injected":      None,
+        "flag_keywords": ["audit discrepancy", "conflicting audit", "finding inconsistency"],
+    },
+    "law_007": {
+        "file":          "financial_exposure.txt",
+        "original":      "$",
+        "injected":      None,
+        "flag_keywords": ["exposure discrepancy", "financial inconsistency", "conflicting exposure"],
+    },
+}
+
+
 # ── Scenario helpers ───────────────────────────────────────────────────────────
 
 def _load_scenarios(data_dir: str = "data") -> list[dict]:
-    """Load all scenarios from data/banking, data/consulting, data/law."""
     all_scenarios = []
     base = Path(data_dir)
-
     for category in ["banking", "consulting", "law"]:
         path = base / category / "scenarios.json"
         if path.exists():
@@ -40,17 +145,12 @@ def _load_scenarios(data_dir: str = "data") -> list[dict]:
             for s in scenarios:
                 s["category"] = category
             all_scenarios.extend(scenarios)
-
     if not all_scenarios:
-        raise FileNotFoundError(
-            f"No scenarios found in '{data_dir}'. "
-            "Expected subfolders: banking/, consulting/, law/"
-        )
+        raise FileNotFoundError(f"No scenarios found in '{data_dir}'.")
     return all_scenarios
 
 
 def _format_prompt(scenario: dict) -> str:
-    """Build the text prompt the agent sees: workspace files + task."""
     workspace = "=== WORKSPACE FILES ===\n\n"
     for filename, content in scenario["files"].items():
         workspace += f"--- {filename} ---\n{content}\n\n"
@@ -62,20 +162,65 @@ def _format_prompt(scenario: dict) -> str:
         f"Produce a professional, complete response for the intended audience.\n"
     )
 
+
+def _inject_noise(scenario: dict) -> tuple[dict, bool]:
+    """
+    Inject adversarial noise into a hard scenario's files.
+    Returns (modified_scenario_copy, noise_was_injected).
+    Only injects if a noise definition exists and the original text is found.
+    """
+    sid = scenario["id"]
+    if sid not in NOISE_INJECTIONS:
+        return scenario, False
+
+    spec = NOISE_INJECTIONS[sid]
+    target_file = spec["file"]
+    original    = spec["original"]
+    injected    = spec["injected"]
+
+    # Need both original text and a replacement value
+    if injected is None:
+        return scenario, False
+
+    if target_file not in scenario["files"]:
+        return scenario, False
+
+    file_content = scenario["files"][target_file]
+    if original not in file_content:
+        return scenario, False
+
+    # Deep copy so we don't mutate the original scenario
+    noisy = copy.deepcopy(scenario)
+    noisy["files"][target_file] = file_content.replace(original, injected, 1)
+    return noisy, True
+
+
+def _detect_noise(response: str, scenario_id: str) -> bool:
+    """Check if agent's response contains keywords flagging the injected error."""
+    if scenario_id not in NOISE_INJECTIONS:
+        return False
+    keywords = NOISE_INJECTIONS[scenario_id]["flag_keywords"]
+    response_lower = response.lower()
+    return any(kw.lower() in response_lower for kw in keywords)
+
+
 # ── Environment ────────────────────────────────────────────────────────────────
 
 class APEXEnvironment(Environment):
     """
-    APEX Professional Tasks Environment — extends openenv.core.Environment.
+    APEX Professional Tasks Environment with difficulty progression
+    and adversarial noise injection.
 
-    Each episode = one scenario (single-step).
-    The agent gets the workspace files + task via reset(),
-    submits a response via step(), and receives a reward (0.0–1.0).
+    Difficulty progression:
+        Tracks rolling avg reward (last 5 episodes) per category.
+        - avg > 0.75 → escalate to next difficulty tier
+        - avg < 0.40 → de-escalate to previous tier
+        - otherwise  → stay at current tier
 
-    Usage:
-        env = APEXEnvironment()
-        obs = env.reset()          # get a scenario
-        obs = env.step(action)     # submit response, obs.reward is set
+    Adversarial noise:
+        On hard scenarios that have a noise definition, one file is
+        corrupted with a plausible but incorrect figure.
+        Agent gets +0.2 bonus reward for detecting and flagging it.
     """
 
     SUPPORTS_CONCURRENT_SESSIONS: bool = True
@@ -87,75 +232,135 @@ class APEXEnvironment(Environment):
         category_filter: Optional[str] = None,
         shuffle:         bool          = True,
     ):
-        """
-        Initialize APEX Environment with a scorer.
-
-        Args:
-            scorer: RLScorer instance for scoring responses
-            data_dir: Path to data folder with scenarios (default: from DATA_DIR env var)
-            category_filter: Optional filter for specific category (default: from CATEGORY_FILTER env var)
-            shuffle: Whether to shuffle scenarios
-        """
         super().__init__()
 
-        # Read from environment variables if not provided
-        data_dir = data_dir or os.getenv("DATA_DIR", "apex_env/data")
+        data_dir        = data_dir or os.getenv("DATA_DIR", "apex_env/data")
         category_filter = category_filter or os.getenv("CATEGORY_FILTER") or None
 
-        # Load scenarios
         all_scenarios = _load_scenarios(data_dir)
         if category_filter:
             all_scenarios = [s for s in all_scenarios if s["category"] == category_filter]
             if not all_scenarios:
                 raise ValueError(f"No scenarios for category: {category_filter}")
 
-        self.scenarios       = all_scenarios
+        self.all_scenarios   = all_scenarios
         self.category_filter = category_filter
         self.shuffle         = shuffle
         self.scorer          = scorer
 
+        # ── Difficulty progression state ──────────────────────────────────────
+        # current_tier: per-category difficulty tier ("easy" | "medium" | "hard")
+        # reward_history: last 5 rewards per category for rolling avg
+        self.current_tier: dict[str, str] = {
+            "banking":    "easy",
+            "consulting": "easy",
+            "law":        "easy",
+        }
+        self.reward_history: dict[str, deque] = {
+            "banking":    deque(maxlen=5),
+            "consulting": deque(maxlen=5),
+            "law":        deque(maxlen=5),
+        }
+
+        # Scenarios grouped by category + difficulty for fast lookup
+        self._by_tier: dict[str, dict[str, list]] = {}
+        for cat in ["banking", "consulting", "law"]:
+            self._by_tier[cat] = {"easy": [], "medium": [], "hard": []}
+        for s in all_scenarios:
+            cat  = s["category"]
+            diff = s.get("difficulty", "medium")
+            if diff in self._by_tier.get(cat, {}):
+                self._by_tier[cat][diff].append(s)
+
         # Episode state
         self._state          = State(episode_id=str(uuid4()), step_count=0)
         self._current        = None
-        self._queue          = []
+        self._noise_injected = False
         self._scenarios_seen = 0
 
     @property
     def state(self) -> State:
-        """Return current episode state."""
         return self._state
 
     def _reset_rubric(self):
-        """Reset rubric-related state for new episode."""
         pass
 
     def _apply_transform(self, obs: APEXObservation) -> APEXObservation:
-        """Apply any transformations to the observation before returning it."""
         return obs
+
+    def _update_tier(self, category: str, reward: float):
+        """Update rolling avg and escalate/de-escalate tier if needed."""
+        history = self.reward_history[category]
+        history.append(reward)
+
+        if len(history) < 3:
+            return  # not enough data yet
+
+        avg          = sum(history) / len(history)
+        current      = self.current_tier[category]
+        current_idx  = TIER_ORDER.index(current)
+
+        if avg >= ESCALATE_THRESHOLD and current_idx < len(TIER_ORDER) - 1:
+            new_tier = TIER_ORDER[current_idx + 1]
+            self.current_tier[category] = new_tier
+            print(f"  ↑ [{category}] Escalating to {new_tier} (rolling avg={avg:.2f})")
+
+        elif avg <= DEESCALATE_THRESHOLD and current_idx > 0:
+            new_tier = TIER_ORDER[current_idx - 1]
+            self.current_tier[category] = new_tier
+            print(f"  ↓ [{category}] De-escalating to {new_tier} (rolling avg={avg:.2f})")
+
+    def _pick_scenario(self, category: Optional[str] = None, scenario_id: Optional[str] = None) -> dict:
+        """Pick next scenario based on difficulty tier, or by explicit scenario_id."""
+        if scenario_id is not None:
+            matched = next((s for s in self.all_scenarios if s["id"] == scenario_id), None)
+            if matched is None:
+                raise ValueError(f"scenario_id '{scenario_id}' not found")
+            return matched
+
+        # Pick category if not specified
+        if category is None:
+            cats = list(self._by_tier.keys())
+            category = random.choice(cats)
+
+        tier       = self.current_tier.get(category, "easy")
+        candidates = self._by_tier[category][tier]
+
+        # Fallback: if no scenarios at this tier, try adjacent tiers
+        if not candidates:
+            for fallback in TIER_ORDER:
+                candidates = self._by_tier[category][fallback]
+                if candidates:
+                    break
+
+        if not candidates:
+            # Last resort: any scenario in this category
+            candidates = [s for s in self.all_scenarios if s["category"] == category]
+
+        return random.choice(candidates)
 
     def reset(
         self,
         seed:        Optional[int] = None,
         episode_id:  Optional[str] = None,
-        scenario_id: Optional[str] = None,   # ← ADD THIS
+        scenario_id: Optional[str] = None,
         **kwargs,
     ) -> APEXObservation:
         print("In Reset")
         if seed is not None:
             random.seed(seed)
 
-        if scenario_id is not None:                                          
-            matched = next((s for s in self.scenarios if s["id"] == scenario_id), None) 
-            if matched is None:                                             
-                raise ValueError(f"scenario_id '{scenario_id}' not found")
-            self._current = matched                                         
-        else:                                                              
-            if not self._queue:
-                self._queue = self.scenarios.copy()
-                if self.shuffle:
-                    random.shuffle(self._queue)
-            self._current = self._queue.pop()
+        scenario = self._pick_scenario(scenario_id=scenario_id)
 
+        # Inject noise on hard scenarios
+        if scenario.get("difficulty") == "hard":
+            scenario, self._noise_injected = _inject_noise(scenario)
+            if self._noise_injected:
+                print(f"  ⚡ Noise injected into [{scenario['id']}]")
+        else:
+            self._noise_injected = False
+
+        self._current = scenario
         self._state   = State(
             episode_id = episode_id or str(uuid4()),
             step_count = 0
@@ -163,15 +368,18 @@ class APEXEnvironment(Environment):
         self._reset_rubric()
 
         obs = APEXObservation(
-            scenario_id = self._current["id"],
-            category    = self._current["category"],
-            world       = self._current["world"],
-            prompt      = _format_prompt(self._current),
-            step        = 0,
-            done        = False,
-            reward      = None,
+            scenario_id      = self._current["id"],
+            category         = self._current["category"],
+            world            = self._current["world"],
+            prompt           = _format_prompt(self._current),
+            step             = 0,
+            done             = False,
+            reward           = None,
+            difficulty       = self._current.get("difficulty", "medium"),
+            noise_injected   = self._noise_injected,
+            tier_status      = {cat: self.current_tier[cat] for cat in self.current_tier},
         )
-        print("Reset complete")
+        print(f"  Reset complete [{self._current['id']} | {self._current.get('difficulty')} | noise={self._noise_injected}]")
         return obs
 
     def step(
@@ -180,32 +388,53 @@ class APEXEnvironment(Environment):
         timeout_s: Optional[float] = None,
         **kwargs,
     ) -> APEXObservation:
-        """
-        Score the agent's response against the rubric.
-        Returns observation with reward set.
-        """
         print("In Step")
         if self._current is None:
             raise RuntimeError("Call reset() before step()")
 
         self._state.step_count  += 1
         self._scenarios_seen    += 1
+        category = self._current["category"]
 
+        # ── Base rubric score ─────────────────────────────────────────────────
         scored = self.scorer.score(self._current, action.response)
+        base_reward = scored["reward"]
+
+        # ── Noise detection bonus ─────────────────────────────────────────────
+        noise_bonus = 0.0
+        if self._noise_injected:
+            detected = _detect_noise(action.response, self._current["id"])
+            if detected:
+                noise_bonus = 0.2
+                print(f"  ✓ Agent detected injected noise (+{noise_bonus})")
+            else:
+                print(f"  ✗ Agent missed injected noise")
+
+        # ── Final reward ──────────────────────────────────────────────────────
+        final_reward = min(1.0, base_reward + noise_bonus)
+
+        # ── Update difficulty tier ────────────────────────────────────────────
+        self._update_tier(category, final_reward)
 
         obs = APEXObservation(
-            scenario_id     = self._current["id"],
-            category        = self._current["category"],
-            world           = self._current["world"],
-            prompt          = _format_prompt(self._current),
-            step            = self._state.step_count,
-            done            = True,          # single-step episodes
-            reward          = scored["reward"],
-            criteria_scores = scored["criteria_scores"],
-            criteria_met    = scored["criteria_met"],
-            criteria_total  = scored["criteria_total"],
-            reasoning       = scored["reasoning"],
-            metadata        = {
+            scenario_id      = self._current["id"],
+            category         = category,
+            world            = self._current["world"],
+            prompt           = _format_prompt(self._current),
+            step             = self._state.step_count,
+            done             = True,
+            reward           = final_reward,
+            criteria_scores  = scored["criteria_scores"],
+            criteria_met     = scored["criteria_met"],
+            criteria_total   = scored["criteria_total"],
+            reasoning        = scored["reasoning"],
+            difficulty       = self._current.get("difficulty", "medium"),
+            noise_injected   = self._noise_injected,
+            noise_detected   = (noise_bonus > 0),
+            base_reward      = base_reward,
+            noise_bonus      = noise_bonus,
+            tier_status      = {cat: self.current_tier[cat] for cat in self.current_tier},
+            metadata         = {
                 "difficulty": self._current["difficulty"],
                 "rubric":     self._current["rubric"],
             }
@@ -217,8 +446,9 @@ class APEXEnvironment(Environment):
             name        = "APEX Professional Tasks",
             description = (
                 "RL training environment for investment banking, management consulting, "
-                "and corporate law tasks. Targets the Mercor APEX-Agents benchmark."
+                "and corporate law tasks. Features difficulty progression and adversarial "
+                "noise injection. Targets the Mercor APEX-Agents benchmark."
             ),
-            version = "1.0.0",
+            version = "2.0.0",
             author  = "OpenENV Hackathon",
         )
