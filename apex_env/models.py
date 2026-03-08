@@ -33,8 +33,11 @@ class APEXObservation(Observation):
     reasoning:       str       = Field(default="", description="Judge's reasoning")
 
     # ── Reward breakdown ───────────────────────────────────────────────────────
-    base_reward:  float = Field(default=0.0, description="Rubric score (criteria_met / criteria_total)")
-    noise_bonus:  float = Field(default=0.0, description="+0.2 if agent detected injected noise")
+    base_reward:    float = Field(default=0.0, description="Rubric score (criteria_met / criteria_total)")
+    noise_bonus:    float = Field(default=0.0, description="+0.2 if agent detected injected noise")
+    gold_score:     float = Field(default=0.0, description="Judge score of the gold reference response")
+    peer_reward:    float = Field(default=0.5, description="Relative reward vs gold: 0.5=matches, >0.5=beats gold")
+    blended_reward: float = Field(default=0.0, description="60% peer + 40% absolute rubric before noise bonus")
 
     # ── Adversarial noise ──────────────────────────────────────────────────────
     noise_injected: bool = Field(default=False, description="Whether noise was injected this episode")

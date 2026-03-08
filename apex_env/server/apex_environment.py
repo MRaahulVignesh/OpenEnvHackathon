@@ -10,6 +10,7 @@ Features:
   - Adversarial noise injection: on hard scenarios, corrupts one file with a
     plausible but incorrect figure; rewards agent for detecting it
   - Returns reward breakdown: base rubric score + noise detection bonus
+  - Peer comparison reward: agent scored relative to gold output (cached per scenario)
 """
 
 import json
@@ -400,6 +401,17 @@ class APEXEnvironment(Environment):
         scored = self.scorer.score(self._current, action.response)
         base_reward = scored["reward"]
 
+        # ── Peer comparison vs gold output ────────────────────────────────────
+        # gold_score is cached after first call — zero extra cost on repeat episodes
+        gold_scored  = self.scorer.score_gold(self._current)
+        gold_score   = gold_scored["reward"]
+        # delta in [-1, 1] → shaped to [0, 1]: 0.5 = matches gold, >0.5 = beats gold
+        delta        = base_reward - gold_score
+        peer_reward  = round(0.5 + (delta / 2.0), 4)
+        # Blend: 60% peer + 40% absolute rubric
+        blended_reward = round(0.6 * peer_reward + 0.4 * base_reward, 4)
+        print(f"  📊 base={base_reward:.2f} gold={gold_score:.2f} peer={peer_reward:.2f} blended={blended_reward:.2f}")
+
         # ── Noise detection bonus ─────────────────────────────────────────────
         noise_bonus = 0.0
         if self._noise_injected:
@@ -411,7 +423,7 @@ class APEXEnvironment(Environment):
                 print(f"  ✗ Agent missed injected noise")
 
         # ── Final reward ──────────────────────────────────────────────────────
-        final_reward = min(1.0, base_reward + noise_bonus)
+        final_reward = min(1.0, blended_reward + noise_bonus)
 
         # ── Update difficulty tier ────────────────────────────────────────────
         self._update_tier(category, final_reward)
@@ -433,6 +445,9 @@ class APEXEnvironment(Environment):
             noise_detected   = (noise_bonus > 0),
             base_reward      = base_reward,
             noise_bonus      = noise_bonus,
+            gold_score       = gold_score,
+            peer_reward      = peer_reward,
+            blended_reward   = blended_reward,
             tier_status      = {cat: self.current_tier[cat] for cat in self.current_tier},
             metadata         = {
                 "difficulty": self._current["difficulty"],
