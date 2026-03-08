@@ -1,0 +1,178 @@
+[
+  {
+    "id": "bank_001",
+    "world": "Meridian Capital - TechCorp Acquisition",
+    "files": {
+      "earnings_model.txt": "TechCorp Q3 Financial Model\n---\nRevenue: $142M (down 8% YoY)\nGross Margin: 61% (down from 67% prior year)\nEBITDA: $18M (down 31% YoY)\nCash: $22M\nDebt: $95M (covenant: must maintain EBITDA/Debt ratio above 0.25 — currently at 0.19, BREACHED)\nCustomer Concentration: Top 3 customers = 71% of revenue\nChurn Rate: 18% annualized (up from 9% last year)\nR&D Spend: $28M (flat YoY despite revenue decline)",
+      "analyst_email_1.txt": "From: James Wu <j.wu@meridiancapital.com>\nTo: Deal Team\nSubject: TechCorp DD Update\n\nTeam - flagging that the churn number came in worse than management guided. They told us 12% in the management presentation but the actual cohort data shows 18%. This is a material discrepancy we need to address in the IC memo.",
+      "analyst_email_2.txt": "From: Sara Chen <s.chen@meridiancapital.com>\nTo: Deal Team\nSubject: Customer Concentration Risk\n\nJust got off the phone with their CFO. Acme Corp (their largest customer at 38% of revenue) has not yet renewed their contract which expires in 6 weeks. CFO said renewal is 'likely' but no LOI signed. This is a significant overhang.",
+      "analyst_email_3.txt": "From: Mike Torres <m.torres@meridiancapital.com>\nTo: Deal Team\nSubject: Debt Covenant Check\n\nRan the numbers on the debt covenants. They are in breach of the EBITDA/Debt covenant as of Q3. Lender has not yet issued a notice of default but technically could. We should flag this prominently.",
+      "client_brief.txt": "Meridian Capital - Investment Committee Brief\nTarget: TechCorp Inc.\nProposed Deal: Leveraged buyout at $180M enterprise value\nMandate: Identify top risks before IC presentation on Friday\nFormat requested: Bullet points, max 1 page, client-ready language"
+    },
+    "task": "Review the workspace files and identify the two largest risks to the TechCorp acquisition. Draft a bullet-point summary suitable for the Investment Committee brief.",
+    "rubric": [
+      "Identifies debt covenant breach as a major risk",
+      "Identifies customer concentration / Acme Corp renewal risk as a major risk",
+      "Mentions the churn rate discrepancy between management guidance (12%) and actual (18%)",
+      "Output is in bullet-point format",
+      "Language is professional and client-ready (no casual tone)"
+    ],
+    "gold_output": "Key Risks - TechCorp Acquisition:\n\n• Debt Covenant Breach: TechCorp is currently in breach of its EBITDA/Debt covenant (ratio of 0.19 vs. required 0.25). While no default notice has been issued, the lender retains the right to accelerate repayment, creating significant deal execution risk.\n\n• Customer Concentration & Renewal Overhang: Top 3 customers represent 71% of revenue. Critically, Acme Corp (38% of revenue) has not renewed its contract expiring in 6 weeks. No LOI is in place, creating material revenue uncertainty at close.\n\n• Deteriorating Retention: Annualized churn of 18% significantly exceeds management's guided 12% — a material discrepancy that raises concerns about management credibility and forward revenue visibility.",
+    "difficulty": "medium",
+    "estimated_minutes": 15
+  },
+
+  {
+    "id": "bank_002",
+    "world": "Apex Partners - Retail Chain Valuation",
+    "files": {
+      "comps_table.txt": "Comparable Companies Analysis - RetailCo\n---\nPeer 1: FastMart — EV/EBITDA: 7.2x, P/E: 14x, Revenue Growth: 3%\nPeer 2: ValueStop — EV/EBITDA: 6.8x, P/E: 12x, Revenue Growth: 1%\nPeer 3: QuickShop — EV/EBITDA: 8.1x, P/E: 16x, Revenue Growth: 6%\nPeer 4: BudgetMart — EV/EBITDA: 5.9x, P/E: 11x, Revenue Growth: -2%\nMedian EV/EBITDA: 7.0x\nMedian P/E: 13x",
+      "retailco_financials.txt": "RetailCo Financial Summary\n---\nLTM Revenue: $580M\nLTM EBITDA: $52M\nLTM Net Income: $28M\nNet Debt: $85M\nShares Outstanding: 42M\nManagement Projected EBITDA (next year): $61M\nNote: Management projections assume 3 new store openings in Q1 which have not yet been approved by the board.",
+      "md_email.txt": "From: Rachel Park <r.park@apexpartners.com>\nTo: Associate Team\nSubject: RetailCo Valuation Range\n\nClient needs a valuation range by EOD. Use the comps to anchor it. Make sure you present both LTM and forward multiples. Flag any assumptions that could move the range materially. Keep it tight — one paragraph max.",
+      "news_clip.txt": "Reuters, yesterday: RetailCo's largest competitor ValueStop announced a major store expansion plan that analysts say could pressure RetailCo's same-store sales in the Midwest, its strongest region."
+    },
+    "task": "Using the comparable companies table and RetailCo financials, calculate an implied valuation range for RetailCo and draft a one-paragraph summary for the client. Flag any key assumptions.",
+    "rubric": [
+      "Calculates EV range using median EV/EBITDA of 7.0x applied to LTM EBITDA of $52M (implied EV ~$364M)",
+      "Calculates equity value by subtracting net debt ($364M - $85M = ~$279M)",
+      "Mentions forward multiple using management projected EBITDA of $61M",
+      "Flags that management projections depend on unapproved store openings",
+      "Output is one paragraph or concise format as requested"
+    ],
+    "gold_output": "Based on comparable company analysis (median EV/EBITDA of 7.0x), RetailCo's implied enterprise value is approximately $364M on an LTM basis, translating to an equity value of ~$279M after netting $85M of debt. Applying forward multiples to management's projected EBITDA of $61M yields an EV of ~$427M ($342M equity value), though this assumes three new store openings in Q1 that have not yet received board approval — a key assumption that could materially reduce the forward estimate if delayed. Competitive pressure from ValueStop's expansion may also weigh on near-term same-store sales in RetailCo's core Midwest markets.",
+    "difficulty": "medium",
+    "estimated_minutes": 20
+  },
+
+  {
+    "id": "bank_003",
+    "world": "Thornton Bank - Credit Assessment",
+    "files": {
+      "loan_application.txt": "Borrower: Greenfield Manufacturing LLC\nLoan Requested: $12M term loan, 5-year tenor\nPurpose: Equipment purchase and working capital\n---\nFinancials:\nRevenue: $34M (FY2025), $29M (FY2024), $24M (FY2023)\nEBITDA: $4.1M (FY2025), $2.8M (FY2024), $1.9M (FY2023)\nExisting Debt: $8.5M\nProposed Total Debt after loan: $20.5M\nDebt/EBITDA (current): 2.1x\nDebt/EBITDA (post-loan): 5.0x\nInterest Coverage (post-loan at 7% rate): 1.4x",
+      "credit_policy.txt": "Thornton Bank Credit Policy - Commercial Loans\n---\nMaximum Debt/EBITDA: 4.0x for manufacturing sector\nMinimum Interest Coverage Ratio: 2.0x\nMinimum operating history: 3 years\nRequired collateral: 1.2x loan value\nCollateral offered by Greenfield: Equipment valued at $9.8M (0.82x coverage — BELOW MINIMUM)",
+      "relationship_manager_email.txt": "From: David Lim <d.lim@thorntonbank.com>\nTo: Credit Committee\nSubject: Greenfield Manufacturing - Loan Recommendation\n\nI've reviewed the Greenfield application. The company has strong revenue growth (40%+ over 2 years) and improving EBITDA margins. Recommend approval. The relationship with Greenfield has been strong for 5 years and they've never missed a payment.",
+      "industry_report.txt": "Manufacturing Sector Outlook Q1 2026:\nInput costs rising 12% YoY due to steel tariffs. Margin compression expected across mid-market manufacturers. Default rates in the sector have risen from 1.2% to 3.8% over the past 18 months."
+    },
+    "task": "Review the Greenfield Manufacturing loan application against Thornton Bank's credit policy. Write a credit assessment memo identifying whether the loan should be approved or declined, and list all policy exceptions required.",
+    "rubric": [
+      "Identifies that post-loan Debt/EBITDA of 5.0x exceeds the 4.0x policy maximum",
+      "Identifies that interest coverage ratio of 1.4x is below the 2.0x minimum",
+      "Identifies that collateral coverage of 0.82x is below the required 1.2x minimum",
+      "Recommends decline or conditional approval requiring exceptions",
+      "Does not simply defer to the relationship manager's recommendation without addressing policy breaches"
+    ],
+    "gold_output": "Credit Assessment - Greenfield Manufacturing LLC\n\nRECOMMENDATION: Decline as structured (3 policy exceptions required)\n\nPolicy Exceptions Identified:\n1. Debt/EBITDA: Post-loan ratio of 5.0x exceeds the 4.0x maximum for manufacturing sector loans\n2. Interest Coverage: Post-loan coverage of 1.4x is below the required 2.0x minimum\n3. Collateral: Equipment valued at $9.8M provides 0.82x coverage, below the required 1.2x\n\nWhile Greenfield demonstrates strong revenue growth and a clean payment history, all three exceptions are material and concurrent. The rising sector default rate (3.8%) and input cost pressures further elevate risk. The loan as structured cannot be approved within policy. A restructured proposal with reduced loan size (~$6-7M) may bring ratios into compliance.",
+    "difficulty": "hard",
+    "estimated_minutes": 25
+  },
+
+  {
+    "id": "bank_004",
+    "world": "Vantage Capital - IPO Readiness",
+    "files": {
+      "company_overview.txt": "CloudSync Inc. - IPO Candidate Overview\nSector: B2B SaaS\nARR: $48M (growing 65% YoY)\nGross Margin: 74%\nNet Revenue Retention: 118%\nBurn Rate: $2.1M/month\nCash Runway: 11 months\nFounders: CEO has taken $3.2M in salary over past 2 years (market rate ~$400K)\nAudit: Only one year of audited financials available\nIP: Core algorithm licensed from MIT, license expires in 18 months with no renewal terms agreed",
+      "ibanker_checklist.txt": "Standard IPO Readiness Checklist - Vantage Capital\n---\n[ ] 2 years audited financials required by SEC\n[ ] Insider compensation reviewed for reasonableness\n[ ] Key IP ownership confirmed and unencumbered\n[ ] Minimum 18 months cash runway at time of filing\n[ ] No material litigation pending",
+      "ceo_email.txt": "From: Alex Rivera <a.rivera@cloudsyncinc.com>\nTo: Vantage Capital Team\nSubject: IPO Timeline\n\nWe're eager to move forward. Our board wants to file the S-1 within 90 days. Growth metrics are strong and we think the market window is open. Can you confirm we're ready to proceed?",
+      "legal_email.txt": "From: Patricia Moore <p.moore@vantagelegal.com>\nTo: Deal Team\nSubject: CloudSync IP Review\n\nCompleted IP review. The MIT license is the company's most critical asset. Current license expires in 18 months and we have confirmed no renewal negotiations have started. This would need to be disclosed as a material risk in the S-1."
+    },
+    "task": "Review the IPO readiness checklist and CloudSync files. Identify all items that would block or materially delay a 90-day IPO filing. Draft a response to the CEO.",
+    "rubric": [
+      "Identifies that only 1 year of audited financials exists vs. the 2 years required by SEC",
+      "Flags CEO compensation of $3.2M vs market rate of $400K as a material issue",
+      "Flags MIT license expiry in 18 months with no renewal as a material risk requiring S-1 disclosure",
+      "Identifies cash runway of 11 months is below the 18-month minimum required",
+      "Response to CEO is professional and clearly explains the blockers without dismissing the timeline entirely"
+    ],
+    "gold_output": "Dear Alex,\n\nThank you for your enthusiasm — CloudSync's metrics are genuinely strong and supportive of a compelling IPO story. However, after reviewing against our standard readiness checklist, we've identified four items that would block or materially complicate a 90-day filing:\n\n1. Audited Financials: SEC requires two years of audited financials. CloudSync currently has one. A second audit would take 3-4 months minimum.\n2. CEO Compensation: $3.2M in salary over two years against a ~$400K market rate will require detailed disclosure and board justification — this will draw significant scrutiny from institutional investors.\n3. MIT License Expiry: The core algorithm license expires in 18 months with no renewal terms in place. This is a material risk requiring prominent S-1 disclosure and will likely be a major investor concern.\n4. Cash Runway: At $2.1M/month burn, you have 11 months of runway — below our 18-month minimum for filing. This creates execution risk if the IPO process extends.\n\nWe recommend addressing items 1 and 4 as immediate priorities. We'd suggest a call this week to discuss a revised timeline.",
+    "difficulty": "hard",
+    "estimated_minutes": 25
+  },
+
+  {
+    "id": "bank_005",
+    "world": "Sterling Advisors - M&A Synergy Analysis",
+    "files": {
+      "acquirer_profile.txt": "BigRetail Corp - Acquirer Profile\nRevenue: $2.1B\nEBITDA: $210M (10% margin)\nHeadcount: 8,400\nWarehouses: 12 (US)\nTech Stack: Legacy ERP (SAP R2, 15 years old)\nAnnual IT spend: $45M",
+      "target_profile.txt": "SmartLogistics Inc - Target Profile\nRevenue: $340M\nEBITDA: $51M (15% margin)\nHeadcount: 1,200\nWarehouses: 4 (US, 2 overlap with BigRetail)\nTech Stack: Modern cloud ERP (built 2022)\nAnnual IT spend: $8M\nProprietary routing algorithm: saves avg 18% on last-mile delivery costs",
+      "synergy_email.txt": "From: Tom Bradley <t.bradley@sterlingadvisors.com>\nTo: Associate\nSubject: Synergy Memo - BigRetail/SmartLogistics\n\nNeed you to pull together the synergy case. Focus on cost synergies — headcount overlap, warehouse consolidation, and IT. Also call out any revenue synergies. Keep it to a one-page memo format.",
+      "hr_data.txt": "Headcount Overlap Analysis (preliminary):\n- Finance functions: ~40 duplicate roles, avg fully-loaded cost $95K = $3.8M\n- HR functions: ~25 duplicate roles, avg fully-loaded cost $85K = $2.1M\n- IT functions: ~60 duplicate roles, avg fully-loaded cost $110K = $6.6M\nTotal headcount synergy estimate: $12.5M annually",
+      "real_estate.txt": "Warehouse Overlap:\n- Dallas facility: Both companies operate within 12 miles. BigRetail lease expires 2026. Consolidation saves est. $4.2M/year.\n- Chicago facility: 8-mile overlap. SmartLogistics lease expires 2027. Consolidation saves est. $3.1M/year.\nTotal real estate synergy: $7.3M annually"
+    },
+    "task": "Using all files in the workspace, prepare a one-page synergy memo for the BigRetail/SmartLogistics acquisition covering cost and revenue synergies.",
+    "rubric": [
+      "Includes headcount synergy of $12.5M from HR/Finance/IT overlap",
+      "Includes real estate synergy of $7.3M from warehouse consolidation",
+      "Identifies IT synergy from migrating BigRetail off legacy SAP to SmartLogistics cloud ERP",
+      "Identifies revenue synergy from applying SmartLogistics routing algorithm to BigRetail's delivery network",
+      "Output is approximately one page and formatted as a professional memo"
+    ],
+    "gold_output": "MEMORANDUM\nTo: Sterling Advisors Deal Team\nRe: BigRetail / SmartLogistics — Synergy Analysis\n\nCOST SYNERGIES (Est. $25M+ annually)\n\n1. Headcount ($12.5M): Elimination of duplicate Finance (~40 roles), HR (~25 roles), and IT (~60 roles) functions yields $12.5M in annualized savings at fully-loaded costs.\n\n2. Real Estate ($7.3M): Warehouse overlap in Dallas ($4.2M) and Chicago ($3.1M) supports consolidation following lease expirations in 2026 and 2027 respectively.\n\n3. IT Modernization (TBD, est. $10-15M over 3 years): BigRetail's legacy SAP R2 platform costs $45M/year vs. SmartLogistics' $8M modern cloud stack. Migration would reduce ongoing IT spend materially, though one-time transition costs will offset near-term savings.\n\nREVENUE SYNERGIES\n\n4. Routing Algorithm: SmartLogistics' proprietary last-mile routing algorithm delivers 18% cost savings on delivery. Applying this to BigRetail's $2.1B revenue base (assuming ~15% logistics cost) represents a potential $57M annual benefit — the largest single synergy in the deal.\n\nTotal identified synergies: $57M+ revenue + $25M+ cost",
+    "difficulty": "medium",
+    "estimated_minutes": 20
+  },
+
+  {
+    "id": "bank_006",
+    "world": "Harrison Group - Distressed Debt Situation",
+    "files": {
+      "company_financials.txt": "Atlas Hotels Group - Financial Summary\nRevenue: $89M (FY2025), down from $134M (FY2023)\nEBITDA: -$4.2M (FY2025)\nDebt: $112M (senior secured), $45M (mezzanine)\nCash: $6.3M\nMonthly cash burn: $1.8M\nRunway: ~3.5 months\nAssets: 6 hotel properties, independently appraised at $98M total",
+      "debt_structure.txt": "Atlas Hotels - Debt Waterfall\n---\nSenior Secured Lenders (syndicate of 4 banks): $112M at SOFR+350, matures in 8 months\nMezzanine Lenders: $45M at 14% fixed, matures in 14 months\nEquity: ~$0 (enterprise value below total debt)\nSenior lender covenant: EBITDA must be positive by Q2 2026 — currently in breach",
+      "restructuring_email.txt": "From: Lisa Nguyen <l.nguyen@harrisongroup.com>\nTo: Restructuring Team\nSubject: Atlas Hotels - Options Analysis\n\nNeed a quick memo on options. Atlas is running out of road. Senior lenders are getting nervous. Think through the main paths: (1) consensual restructuring, (2) asset sale, (3) Chapter 11. What are pros/cons of each given where we are?",
+      "asset_appraisal.txt": "Independent Appraisal - Atlas Hotels Properties\nProperty 1 (NYC Midtown): $28M\nProperty 2 (Chicago Loop): $19M\nProperty 3 (Miami Beach): $24M\nProperty 4 (Austin Downtown): $12M\nProperty 5 (Denver): $8M\nProperty 6 (Phoenix): $7M\nTotal: $98M\nNote: In a distressed/forced sale scenario, appraiser estimates 15-25% discount to these values."
+    },
+    "task": "Review all files and prepare a memo outlining the three restructuring options for Atlas Hotels, with pros and cons of each given the current situation.",
+    "rubric": [
+      "Identifies that total debt ($157M) exceeds asset value ($98M), meaning equity is wiped out",
+      "Correctly identifies consensual restructuring, asset sale, and Chapter 11 as the three options",
+      "Notes that with only 3.5 months cash runway, time is a critical constraint",
+      "Mentions that a forced asset sale would yield 15-25% less than appraised value",
+      "Memo is structured with clear pros/cons for each option"
+    ],
+    "gold_output": "MEMORANDUM\nRe: Atlas Hotels — Restructuring Options Analysis\n\nSITUATION: Atlas is technically insolvent (total debt $157M vs. asset value $98M), in covenant breach, and has ~3.5 months of cash remaining. Immediate action is required.\n\nOPTION 1: CONSENSUAL RESTRUCTURING\nPros: Avoids bankruptcy costs and stigma; preserves operating business; gives lenders more control over outcome\nCons: Requires agreement from all 4 senior lenders + mezzanine holders — complex with limited time; mezzanine likely to resist given they're deeply out of the money\n\nOPTION 2: ASSET SALE\nPros: Cleanest path for senior lenders to recover; NYC, Miami, and Chicago properties alone could cover most of senior debt ($71M)\nCons: Distressed sale discount of 15-25% reduces recovery; full portfolio sale takes 3-6 months — tight against 3.5-month runway; loses going-concern value\n\nOPTION 3: CHAPTER 11\nPros: Automatic stay halts debt payments and buys time; allows structured sale (363 sale) at better prices than pure distressed sale; can reject unfavorable leases\nCons: Expensive (legal/advisory fees); management distraction; reputational damage affects hotel bookings during process\n\nRECOMMENDATION: Given the time constraint, we recommend pursuing parallel tracks — initiate consensual restructuring conversations immediately while preparing Chapter 11 filing as a backstop.",
+    "difficulty": "hard",
+    "estimated_minutes": 30
+  },
+
+  {
+    "id": "bank_007",
+    "world": "Pinnacle Securities - Earnings Quality Review",
+    "files": {
+      "income_statement.txt": "NovaTech Inc. - Income Statement (FY2025)\nRevenue: $210M\nCost of Goods: $126M\nGross Profit: $84M (40% margin)\nSG&A: $38M\nEBITDA: $46M\nD&A: $12M\nEBIT: $34M\nInterest: $8M\nPBT: $26M\nTax: $5.2M (effective rate: 20%)\nNet Income: $20.8M",
+      "footnotes.txt": "NovaTech FY2025 Financial Footnotes:\n1. Revenue Recognition: $18M of Q4 revenue relates to a one-time government contract that management does not expect to recur.\n2. SG&A: Excludes $6M in restructuring charges classified as 'non-recurring' — this is the third consecutive year such charges have been excluded.\n3. Tax: Company benefited from a $4.1M one-time R&D tax credit in FY2025 that expires in FY2026.\n4. Inventory: Inventory write-downs of $3.2M were excluded from COGS and classified below the line.",
+      "analyst_request.txt": "From: Senior Analyst\nTo: Associate\nSubject: NovaTech Earnings Quality\n\nBefore we build our model, I need you to calculate 'clean' or normalized EBITDA and net income — stripping out all one-time items. Show your work. Flag anything that looks like aggressive accounting."
+    },
+    "task": "Using the income statement and footnotes, calculate normalized EBITDA and normalized net income for NovaTech. Flag any aggressive accounting practices.",
+    "rubric": [
+      "Removes $18M one-time government contract revenue to get normalized revenue of $192M",
+      "Adds back $6M recurring 'non-recurring' restructuring charges to get normalized EBITDA of $34M (not $46M)",
+      "Adds back $3.2M inventory write-down excluded from COGS",
+      "Adjusts for $4.1M one-time tax credit to get normalized tax",
+      "Flags that restructuring charges for three consecutive years suggests these are not truly non-recurring"
+    ],
+    "gold_output": "Normalized Financials - NovaTech FY2025\n\nRevenue: $192M (removing $18M one-time government contract)\nGross Profit: $76.8M (40% margin, removing $3.2M inventory write-down from COGS)\nEBITDA (normalized): $34M (reported $46M, less $18M revenue, add back $6M 'non-recurring' restructuring)\nNormalized Net Income: ~$13.5M (adjusted for recurring restructuring + removal of $4.1M one-time tax credit)\n\nAGGRESSIVE ACCOUNTING FLAGS:\n1. Restructuring charges ($6M) have been excluded as 'non-recurring' for three consecutive years — by definition, these are recurring operating costs and should be included in EBITDA\n2. Inventory write-downs ($3.2M) classified below the line instead of in COGS understates true cost base\n3. One-time tax credit ($4.1M) inflates current year net income by ~20% and will not repeat\n\nConclusion: Reported EBITDA of $46M overstates underlying earnings power by ~$12M. True run-rate EBITDA is closer to $34M.",
+    "difficulty": "hard",
+    "estimated_minutes": 25
+  },
+
+  {
+    "id": "bank_008",
+    "world": "Cascade Partners - Capital Raise",
+    "files": {
+      "company_summary.txt": "BioForge Therapeutics - Series C Overview\nStage: Clinical (Phase 2)\nLead Asset: BFG-101 (oncology)\nPhase 2 results: 34% response rate vs. 18% for standard of care\nPatent expiry: 2031\nBurn rate: $3.4M/month\nCash: $28M (runway: ~8 months)\nPrevious rounds: Seed $4M, Series A $18M, Series B $45M (at $180M post-money)\nAsk: $80M Series C",
+      "term_sheet_draft.txt": "Draft Term Sheet - Lead Investor: Apex Bio Fund\nInvestment: $40M\nValuation: $220M pre-money ($260M post-money)\nLiquidation preference: 2x non-participating\nAnti-dilution: Full ratchet\nBoard seat: 2 of 5\nPro-rata rights: Yes",
+      "existing_investor_email.txt": "From: Mark Chen (Series B lead investor)\nTo: CEO, BioForge\nSubject: Series C Terms - CONCERNS\n\nWe are deeply concerned about the full ratchet anti-dilution and 2x non-participating liquidation preference. These are extremely founder/employee unfriendly. The full ratchet means if you raise a down round in the future, existing equity holders get severely diluted. We strongly recommend pushing back on both provisions.",
+      "market_data.txt": "Comparable Series C Biotech Transactions (2025):\nMedian pre-money valuation for Phase 2 oncology: $240M\nMedian liquidation preference: 1x non-participating\nMedian anti-dilution: Broad-based weighted average\nNote: Full ratchet anti-dilution has been used in only 2% of Series C deals in the past 3 years."
+    },
+    "task": "Review the draft term sheet for BioForge's Series C. Identify any terms that are out of market and advise the CEO on what to push back on.",
+    "rubric": [
+      "Identifies 2x liquidation preference as above market (market is 1x)",
+      "Identifies full ratchet anti-dilution as highly unusual (only 2% of deals) and recommends broad-based weighted average instead",
+      "Notes the pre-money valuation of $220M is below the market median of $240M for comparable deals",
+      "Flags the cash runway of 8 months as context for negotiating leverage",
+      "Advice is actionable and prioritized"
+    ],
+    "gold_output": "CEO Advisory - BioForge Series C Term Sheet Review\n\nThree terms require pushback, in priority order:\n\n1. ANTI-DILUTION (Critical): Full ratchet anti-dilution is used in only 2% of comparable deals. Market standard is broad-based weighted average. Full ratchet would severely dilute founders, employees, and existing investors in any future down round. This is the most important term to negotiate.\n\n2. LIQUIDATION PREFERENCE (Important): 2x non-participating is above market. Standard for Series C oncology deals is 1x non-participating. A 2x preference means Apex recovers $80M before any other proceeds are shared.\n\n3. VALUATION (Negotiate): $220M pre-money is below the $240M median for comparable Phase 2 oncology companies. Given BFG-101's 34% response rate (vs. 18% SoC), a strong efficacy story supports a higher ask.\n\nContext: With 8 months of runway, you have negotiating leverage but not unlimited time. Prioritize fixing anti-dilution and liquidation preference — these have long-term structural consequences. Valuation is secondary.",
+    "difficulty": "medium",
+    "estimated_minutes": 20
+  }
+]

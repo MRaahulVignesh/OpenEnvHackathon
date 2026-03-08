@@ -1,0 +1,155 @@
+[
+  {
+    "id": "consult_001",
+    "world": "Meridian Consulting - EuroOil Cost Reduction",
+    "files": {
+      "project_brief.txt": "Client: EuroOil AG (European oil & gas, €4.2B revenue)\nEngagement: Cost reduction strategy\nTarget: Identify €150M in sustainable savings\nTimeline: 8-week engagement, Week 4 of 8\nDeliverables: Executive summary + detailed workplan by Friday",
+      "cost_breakdown.txt": "EuroOil Cost Structure (FY2025)\n---\nProcurement (direct materials): €1,840M (44% of revenue)\nLabor (field operations): €630M (15%)\nMaintenance & Repair: €420M (10%)\nCorporate overhead: €380M (9%)\nLogistics & distribution: €290M (7%)\nIT systems: €168M (4%)\nOther: €462M (11%)\nTotal OpEx: €4,190M",
+      "benchmark_data.txt": "Industry Benchmarks - Oil & Gas Operators\n---\nProcurement as % revenue: EuroOil 44% vs. industry best-in-class 38%\nMaintenance cost per barrel: EuroOil $18.2 vs. peer median $13.4\nCorporate overhead as % revenue: EuroOil 9% vs. peer median 6%\nIT spend as % revenue: EuroOil 4% vs. peer median 2.8%",
+      "team_chat.txt": "Slack - #eurooil-project\n---\nSarah (Manager): Quick reminder - client wants THREE specific workstreams in the exec summary, not just a list of ideas. Each workstream needs an owner, a timeline, and a savings estimate.\nJames (Associate): Got it. Should we include quick wins (under 90 days) separately?\nSarah: Yes, highlight anything under 90 days — the CFO specifically asked about quick wins in the last steering committee."
+    },
+    "task": "Using the cost breakdown and benchmark data, identify the top three cost reduction workstreams for EuroOil. Draft an executive summary with owner, timeline, and savings estimate for each. Highlight any quick wins.",
+    "rubric": [
+      "Identifies procurement gap (44% vs 38% best-in-class on €1,840M base = ~€110M opportunity) as a workstream",
+      "Identifies maintenance cost gap ($18.2 vs $13.4 per barrel) as a workstream",
+      "Identifies corporate overhead gap (9% vs 6% on €380M = ~€113M) as a workstream",
+      "Each workstream includes owner role, timeline, and savings estimate",
+      "Quick wins (under 90 days) are highlighted separately as requested by CFO"
+    ],
+    "gold_output": "EXECUTIVE SUMMARY: EuroOil Cost Reduction — Three Priority Workstreams\n\nWORKSTREAM 1: Strategic Procurement Transformation\nOpportunity: Closing the gap from 44% to 38% of revenue on €1,840M procurement base = ~€110M\nOwner: Chief Procurement Officer\nTimeline: 12-18 months (contract renegotiations, supplier consolidation)\nQuick Win: Renegotiate top 10 suppliers (est. €15-20M in 90 days)\n\nWORKSTREAM 2: Maintenance Efficiency\nOpportunity: Reducing cost-per-barrel from $18.2 to peer median $13.4 across field operations\nOwner: VP Field Operations\nTimeline: 18-24 months (predictive maintenance tech + contractor rationalization)\nQuick Win: Contractor rate benchmarking (est. €8-12M in 60 days)\n\nWORKSTREAM 3: Corporate Overhead Reduction\nOpportunity: Reducing overhead from 9% to 6% of revenue on €380M base = ~€113M potential\nOwner: CFO / HR\nTimeline: 12 months (spans/layers analysis, shared services)\nQuick Win: Halt non-essential external consulting spend (est. €5M in 30 days)\n\nCOMBINED SAVINGS POTENTIAL: €150M+ (in line with engagement target)",
+    "difficulty": "medium",
+    "estimated_minutes": 20
+  },
+
+  {
+    "id": "consult_002",
+    "world": "Strategy& - Retail Digital Transformation",
+    "files": {
+      "client_situation.txt": "Client: NordicRetail (Scandinavian retailer, €1.1B revenue, 280 stores)\nSituation: E-commerce now 8% of revenue vs. industry average 31%\nProblem: Online conversion rate: 1.2% vs. industry average 3.4%\nMobile traffic: 67% of visits but only 22% of online purchases\nCart abandonment rate: 81% (industry average 68%)\nAvg page load time: 6.2 seconds (industry standard: under 2 seconds)\nLast digital investment: 2019 platform build",
+      "customer_survey.txt": "NordicRetail Customer Survey Results (n=2,400)\n---\nTop reasons for not completing online purchase:\n1. Website too slow (61% cited)\n2. Difficult to use on mobile (54%)\n3. Couldn't find product easily (48%)\n4. Payment process too complicated (41%)\n5. No guest checkout option (38%)\nNPS score online: 12 (vs. in-store NPS: 67)",
+      "competitor_analysis.txt": "Competitive Benchmarks\n---\nIKEA Nordic: E-commerce 38% of revenue, conversion 4.1%, mobile conversion 3.8%\nH&M Nordic: E-commerce 29% of revenue, conversion 3.2%, mobile conversion 2.9%\nZara Nordic: E-commerce 33% of revenue, conversion 3.6%, mobile conversion 3.4%\nAll three re-platformed in 2022-2023",
+      "it_email.txt": "From: CTO, NordicRetail\nTo: Consulting Team\nSubject: Platform Options\n\nWe've had two vendors pitch us: (1) Full re-platform to Salesforce Commerce Cloud — €8M, 18 months (2) Incremental fixes to existing platform — €1.2M, 6 months. Board wants a recommendation at next month's meeting."
+    },
+    "task": "Review all files and prepare a recommendation for NordicRetail on their digital transformation approach. Address the two platform options and prioritize the most impactful fixes.",
+    "rubric": [
+      "Identifies page load speed (6.2s vs 2s standard) as most critical fix given 61% of customers cited it",
+      "Identifies mobile experience gap as high priority (67% traffic, only 22% purchases)",
+      "Recommends re-platforming over incremental fixes given competitor re-platforms and scale of gap vs. industry",
+      "Addresses both vendor options with clear pros/cons",
+      "Quantifies the opportunity (closing conversion gap from 1.2% to industry avg 3.4% on current traffic)"
+    ],
+    "gold_output": "NordicRetail Digital Transformation Recommendation\n\nRECOMMENDATION: Re-platform (Option 1), with immediate quick fixes in parallel\n\nRATIONALE:\nNordicRetail's digital gap is structural, not cosmetic. Conversion of 1.2% vs. 3.4% industry average means the business is generating approximately €27M in online revenue where it should be generating €94M — a €67M annual gap. Incremental fixes on a 2019 platform will not close this gap; all three major competitors re-platformed in 2022-2023.\n\nIMMEDIATE PRIORITIES (do regardless of platform decision):\n1. Page speed: 6.2s load time is the #1 customer complaint (61%) and directly suppresses conversion. CDN and image optimization can reduce to <3s within 60 days at minimal cost.\n2. Guest checkout: 38% of abandonment linked to no guest option — a 2-week development fix\n3. Mobile checkout flow: 67% of traffic, 22% of sales — simplify payment flow\n\nPLATFORM DECISION:\n• Option 1 (Salesforce, €8M, 18 months): Recommended. Positions NordicRetail competitively for 5+ years. All major peers are on modern platforms.\n• Option 2 (Incremental, €1.2M, 6 months): Not recommended as primary strategy. Addresses symptoms, not root cause. Risk of continued underperformance.\n\nPROJECTED IMPACT: Closing half the conversion gap = +€33M annual revenue.",
+    "difficulty": "medium",
+    "estimated_minutes": 25
+  },
+
+  {
+    "id": "consult_003",
+    "world": "McKinsey - Hospital Operations",
+    "files": {
+      "hospital_data.txt": "St. Mary's General Hospital - Operations Data\nBeds: 420\nOccupancy rate: 94% (benchmark: 85%)\nAverage length of stay (ALOS): 6.8 days (benchmark: 5.1 days)\nED wait time: 4.2 hours (benchmark: 2.5 hours)\nOR utilization: 61% (benchmark: 75-80%)\nNurse-to-patient ratio: 1:8 (recommended: 1:5)\nReadmission rate (30-day): 19% (benchmark: 12%)\nStaff overtime: 34% above baseline",
+      "department_breakdown.txt": "Bottleneck Analysis by Department:\n---\nED: 22% of admissions waiting >6 hours for inpatient bed\nSurgery: 31% of OR slots unused on Mondays and Fridays\nDischarge: Average discharge time 2:30pm (best practice: before noon)\nPharmacy: Average medication delivery time to floor: 3.4 hours\nHousekeeping: Average room turnover time: 4.1 hours (benchmark: 2.5 hours)",
+      "cmo_email.txt": "From: Dr. Patricia Hall (CMO)\nTo: Consulting Team\nSubject: Priorities\n\nOur biggest pain point is patient flow — we are full all the time but throughput is poor. Beds are occupied but patients are staying too long and new patients can't get in. I want to understand what's causing the ALOS problem specifically and what we can fix in the next 90 days.",
+      "financial_impact.txt": "Financial Context:\nEach 1-day reduction in ALOS frees approximately 60 bed-days per month\nCost of excess overtime: $4.2M annually\nEstimated revenue lost to ED diversions (turning away ambulances): $8.1M annually\nOR idle time cost: $3,200/hour"
+    },
+    "task": "Analyze the hospital operations data and prepare a memo for the CMO identifying the root causes of the ALOS problem and recommending specific 90-day interventions.",
+    "rubric": [
+      "Identifies late discharge time (2:30pm vs noon best practice) as a primary ALOS driver",
+      "Identifies housekeeping room turnover (4.1 hours vs 2.5 benchmark) as a contributing bottleneck",
+      "Identifies 30-day readmission rate of 19% vs 12% benchmark as an ALOS/capacity issue",
+      "Recommends specific 90-day fixes not just general principles",
+      "Quantifies financial impact of improvements where data supports it"
+    ],
+    "gold_output": "MEMO TO: Dr. Patricia Hall, CMO\nRE: ALOS Root Cause Analysis and 90-Day Interventions\n\nROOT CAUSES OF ELEVATED ALOS (6.8 days vs 5.1 benchmark):\n\n1. Late Discharge Process: Average discharge at 2:30pm vs. noon best practice means beds sit occupied for 2.5 extra hours per patient. This alone contributes an estimated 0.5-0.8 days to ALOS and blocks ED admissions.\n\n2. Slow Room Turnover: Housekeeping averages 4.1 hours per room vs. 2.5-hour benchmark. Even after discharge, beds are unavailable for 1.6 extra hours — compounding the late discharge problem.\n\n3. High Readmissions: 19% 30-day readmission vs. 12% benchmark indicates premature discharge or inadequate discharge planning. Paradoxically, this inflates ALOS as readmitted patients are often sicker and stay longer.\n\n90-DAY INTERVENTIONS:\n\n1. Discharge by Noon Program: Identify patients for next-day discharge during evening rounds. Brief housekeeping on schedule night before. Target: shift avg discharge to 11:30am. Est. impact: free 60+ bed-days/month.\n\n2. Housekeeping Rapid Response Team: Dedicate 3-4 housekeepers to priority room turnovers triggered by discharge orders. Target: reduce turnover to 2.5 hours. No capital required.\n\n3. Discharge Planning Redesign: Assign social worker/care coordinator to every admission within 24 hours. Build discharge criteria into admission plan. Target: reduce readmissions to 15% in 90 days. Est. financial impact: reduce $8.1M diversion revenue loss by 30%.",
+    "difficulty": "hard",
+    "estimated_minutes": 25
+  },
+
+  {
+    "id": "consult_004",
+    "world": "Bain - Private Equity Portfolio Review",
+    "files": {
+      "portfolio_overview.txt": "Crestview PE - Portfolio Company Review Q1 2026\n---\nCompany A (EdTech): Revenue $42M, EBITDA $8M, growing 28% YoY. Hold.\nCompany B (Manufacturing): Revenue $180M, EBITDA $14M, flat growth. Debt/EBITDA 4.8x. Covenant pressure.\nCompany C (SaaS): Revenue $31M, ARR $35M, NRR 124%, growing 55% YoY. EBITDA -$3M (investing mode).\nCompany D (Healthcare): Revenue $95M, EBITDA $18M, growing 8% YoY. Potential add-on acquisition identified.\nCompany E (Retail): Revenue $62M, EBITDA $2M, declining 12% YoY. Considering exit.",
+      "market_conditions.txt": "Market Conditions Q1 2026:\nM&A multiples: SaaS 8-12x ARR, Healthcare services 10-14x EBITDA, Manufacturing 5-7x EBITDA, EdTech 6-9x EBITDA, Retail 3-4x EBITDA\nPrivate credit: Available at SOFR+450 for quality assets\nIPO window: Partially open for high-growth tech assets",
+      "partner_email.txt": "From: Managing Partner\nTo: Consulting Team\nSubject: Portfolio Prioritization\n\nI need a one-page view on each company: hold, grow, or exit? Also flag which company is most at risk and which has the most near-term value creation opportunity. We have a LP meeting in 2 weeks.",
+      "add_on_memo.txt": "Company D (Healthcare) Add-on Target:\nTarget company revenue: $22M, EBITDA $4.5M\nAsk price: $55M (12.2x EBITDA)\nSynergies identified: $3.2M (combined EBITDA post-synergies: $25.5M)\nPost-acquisition combined EBITDA multiple paid: 9.0x — within market range"
+    },
+    "task": "Review all portfolio files and prepare a one-page hold/grow/exit recommendation for each company for the LP meeting. Flag the highest-risk company and the best near-term value creation opportunity.",
+    "rubric": [
+      "Recommends exit for Company E (retail, declining revenue, low multiple environment)",
+      "Flags Company B as highest risk (Debt/EBITDA 4.8x with covenant pressure)",
+      "Identifies Company C (SaaS, 55% growth, 124% NRR) as best near-term value creation via IPO or sale",
+      "Recommends proceeding with Company D add-on given synergies bring multiple to 9.0x within market range",
+      "Output is approximately one page as requested"
+    ],
+    "gold_output": "CRESTVIEW PE — PORTFOLIO REVIEW Q1 2026\n\nCompany A (EdTech): HOLD. Solid 28% growth, healthy EBITDA. No urgency to exit. Market multiples supportive at 6-9x EBITDA when ready.\n\nCompany B (Manufacturing): WATCH/RESTRUCTURE. HIGHEST RISK. Debt/EBITDA of 4.8x with covenant pressure. Flat growth limits refinancing options. Engage lenders proactively and explore operational improvements or partial asset sale to reduce leverage.\n\nCompany C (SaaS): GROW/PREPARE EXIT. BEST VALUE CREATION OPPORTUNITY. 55% growth + 124% NRR = compelling IPO or strategic sale candidate. Current market offers 8-12x ARR. At $35M ARR, potential exit value $280-420M. Begin dual-track (IPO + strategic) preparation now.\n\nCompany D (Healthcare): GROW + ACQUIRE. Pursue add-on acquisition. Post-synergy multiple of 9.0x is within market range of 10-14x on exit — value accretive. Continued 8% organic growth + add-on positions for premium exit in 18-24 months.\n\nCompany E (Retail): EXIT. Revenue declining 12% YoY with only $2M EBITDA. Retail multiples at 3-4x EBITDA limit upside. Exit now before further deterioration reduces value further.",
+    "difficulty": "medium",
+    "estimated_minutes": 20
+  },
+
+  {
+    "id": "consult_005",
+    "world": "Deloitte - Supply Chain Resilience",
+    "files": {
+      "client_situation.txt": "Client: GlobalMed Devices (medical device manufacturer, $2.8B revenue)\nCrisis: Single-source supplier (TaiwanChip Co.) provides 78% of critical semiconductors\nEvent: TaiwanChip Co. announced 6-month production shutdown due to facility damage\nImpact: GlobalMed has 11 weeks of semiconductor inventory\nAt-risk revenue: $890M of product lines dependent on these chips",
+      "supplier_database.txt": "Alternative Semiconductor Suppliers Identified:\n---\nSupplier A (South Korea): Qualified for 40% of GlobalMed's chip specs, 14-week qualification lead time, capacity available\nSupplier B (Germany): Qualified for 65% of specs, 8-week qualification, higher cost (+18%), limited capacity (covers 30% of need)\nSupplier C (US): Not yet qualified, 20-week qualification lead time, full capacity available, strategic partnership potential\nSupplier D (Japan): Qualified for 90% of specs, 16-week lead time, cost-neutral, capacity limited to 50% of need",
+      "operations_email.txt": "From: VP Supply Chain\nTo: Consulting Team\nSubject: Urgent - Need Options\n\nWe have 11 weeks of inventory. After that, production stops on $890M of revenue. I need a prioritized action plan for the next 11 weeks AND a 12-month resilience strategy. Leadership meeting is tomorrow morning.",
+      "product_priority.txt": "Product Line Risk Triage:\nTier 1 (Life-critical devices, cannot stop): $320M revenue, requires 45% of chip volume\nTier 2 (Important, some delay acceptable): $380M revenue, requires 35% of chip volume\nTier 3 (Elective/deferrable): $190M revenue, requires 20% of chip volume"
+    },
+    "task": "Prepare an action plan for the VP Supply Chain covering immediate actions for the 11-week window and a 12-month resilience strategy. Prioritize by product tier.",
+    "rubric": [
+      "Prioritizes Tier 1 life-critical devices first in chip allocation during the 11-week window",
+      "Recommends immediately engaging Supplier B (fastest qualified, 8-week lead time) for emergency supply",
+      "Identifies Supplier D (90% spec match, cost-neutral) as best long-term primary alternative",
+      "Recommends reducing or stopping Tier 3 production to extend Tier 1/2 inventory runway",
+      "12-month strategy includes dual-sourcing to avoid single-source dependency"
+    ],
+    "gold_output": "GLOBALMED DEVICES — SUPPLY CHAIN ACTION PLAN\n\nIMMEDIATE (0-11 WEEKS):\n\n1. Triage chip inventory: Allocate 100% of remaining inventory to Tier 1 (life-critical, $320M). This covers Tier 1 for ~24 weeks at 45% allocation. Immediately suspend Tier 3 production (frees 20% of chip volume).\n\n2. Emergency sourcing — Supplier B: Only qualified supplier with <11-week lead time (8 weeks). +18% cost premium is acceptable in crisis. Engage today for maximum capacity (covers 30% of need).\n\n3. Fast-track Supplier A qualification: 14-week lead time overlaps slightly with inventory window. Begin qualification immediately. Covers 40% of specs.\n\nCRITICAL GAP: Even with Suppliers A+B, coverage is ~70% of need at ~11 weeks. Tier 2 production will face delays. Notify customers in Tier 2 this week.\n\n12-MONTH RESILIENCE STRATEGY:\n\n1. Dual-source policy: Mandate no single supplier >50% of any critical component. Implement within 6 months.\n\n2. Primary alternative: Qualify Supplier D (90% spec match, cost-neutral). Best long-term fit despite 16-week lead time. Target: fully qualified and contracted within 5 months.\n\n3. Strategic partnership: Initiate Supplier C qualification (US, 20 weeks) as third-source for geopolitical diversification.\n\n4. Inventory buffer policy: Establish 16-week strategic inventory for all Tier 1 critical components.",
+    "difficulty": "hard",
+    "estimated_minutes": 30
+  },
+
+  {
+    "id": "consult_006",
+    "world": "BCG - Market Entry Strategy",
+    "files": {
+      "client_brief.txt": "Client: NordicBank (Norwegian retail bank, €8B assets)\nObjective: Evaluate entry into German retail banking market\nTimeline: Board decision in 6 weeks\nBudget for analysis: Not specified",
+      "germany_market.txt": "German Retail Banking Market Overview:\nTotal market: €180B deposits\nTop 5 players control 71% of market\nDigital banks (N26, Revolut, Trade Republic): Growing 40% YoY, now 12% market share\nCustomer acquisition cost (traditional): €280 average\nCustomer acquisition cost (digital): €45 average\nAverage revenue per retail customer: €340/year\nRegulatory: BaFin license required, 18-24 month timeline, €5M minimum capital\nNordicBank current: No German operations, no BaFin license, no German brand recognition",
+      "internal_capabilities.txt": "NordicBank Capability Assessment:\nDigital platform: Modern (2021 build), rated 4.6/5 by Norwegian customers\nProducts: Savings, current accounts, mortgages, personal loans\nLanguage: No German-language operations currently\nPartnerships: None in German market\nM&A: Has acquired two smaller Nordic banks in past 5 years\nCapital available for expansion: ~€120M",
+      "strategic_options_email.txt": "From: Strategy Director\nTo: Consulting Team\nSubject: Options to Consider\n\nBoard wants us to assess three options: (1) Greenfield digital bank launch, (2) Acquisition of existing German bank, (3) Partnership/white-label with existing German bank. Give pros/cons and a recommendation."
+    },
+    "task": "Analyze the three market entry options for NordicBank's German expansion. Provide a recommendation with supporting rationale.",
+    "rubric": [
+      "Addresses all three options: greenfield, acquisition, and partnership",
+      "Highlights BaFin licensing as a key barrier for greenfield (18-24 month timeline)",
+      "Notes NordicBank's strong digital platform as a competitive advantage",
+      "Recommends acquisition or partnership as faster path given licensing timeline",
+      "Recommendation is specific and supported by data from the files"
+    ],
+    "gold_output": "NORDICBANK GERMANY ENTRY — STRATEGIC OPTIONS ANALYSIS\n\nOPTION 1: GREENFIELD DIGITAL BANK\nPros: Full control of brand, product, customer experience; NordicBank's 4.6/5 digital platform is genuinely competitive; digital banks growing 40% YoY in Germany\nCons: BaFin license takes 18-24 months; zero brand recognition in Germany; customer acquisition from scratch at €45/customer still requires significant marketing investment; enters market 3+ years behind N26, Revolut\nVerdict: High upside but slowest path. Only viable if board has 3-5 year horizon.\n\nOPTION 2: ACQUISITION\nPros: Fastest path to scale; acquires BaFin license, existing customer base, brand, and German-language operations in one transaction; consistent with NordicBank's M&A track record\nCons: Premium required; integration risk; German retail banks trade at 0.7-1.1x book — with €120M capital, acquirable assets are limited to smaller regional players\nVerdict: Best option if right target exists. Prioritize finding acquisition candidates immediately.\n\nOPTION 3: PARTNERSHIP / WHITE-LABEL\nPros: Fastest to market (months not years); no licensing required; low capital commitment; test market before full commitment\nCons: Limited upside; dependent on partner; difficult to build NordicBank brand\nVerdict: Best fallback if no acquisition target available. Use to generate revenue and market intelligence while pursuing acquisition.\n\nRECOMMENDATION: Pursue Option 2 (acquisition) as primary path with Option 3 as parallel track. Begin M&A target screening immediately. Do not pursue greenfield given board's 6-week timeline and 18-24 month licensing barrier.",
+    "difficulty": "medium",
+    "estimated_minutes": 25
+  },
+
+  {
+    "id": "consult_007",
+    "world": "Oliver Wyman - Insurance Pricing Review",
+    "files": {
+      "portfolio_data.txt": "SafeGuard Insurance - Auto Portfolio Review\nTotal policies: 284,000\nGross written premium: $412M\nCombined ratio: 108% (loss ratio 71%, expense ratio 37%)\nTarget combined ratio: 95%\nLoss ratio by segment:\n- Urban drivers <25: 94% loss ratio\n- Urban drivers 25-45: 68% loss ratio  \n- Suburban drivers <25: 81% loss ratio\n- Suburban drivers 25-45: 58% loss ratio\n- Rural all ages: 61% loss ratio",
+      "pricing_analysis.txt": "Current Pricing vs. Actuarial Need:\n- Urban drivers <25: Priced 22% below actuarial need\n- Urban drivers 25-45: Priced 4% below actuarial need\n- Suburban drivers <25: Priced 11% below actuarial need\n- Suburban drivers 25-45: Priced 6% above actuarial need\n- Rural all ages: Priced 9% above actuarial need\nNote: State regulation limits annual rate increases to 15% per policy",
+      "actuary_email.txt": "From: Chief Actuary\nTo: Consulting Team\nSubject: Pricing Reform Priority\n\nWe need to fix the combined ratio by end of year. The 15% regulatory cap means we can't fix everything in one cycle. Tell me which segments to prioritize and in what sequence to get to 95% combined ratio fastest.",
+      "competitive_data.txt": "Competitor Pricing Analysis:\nUrban <25: SafeGuard is 18% below market average\nUrban 25-45: SafeGuard is 3% below market average\nSuburban <25: SafeGuard is 9% below market average\nNote: Being below market means we can raise prices without significant churn risk in these segments"
+    },
+    "task": "Analyze the pricing data and recommend a sequenced pricing reform plan to bring SafeGuard's combined ratio from 108% to 95%. Account for the 15% annual rate cap.",
+    "rubric": [
+      "Prioritizes Urban drivers <25 first (94% loss ratio, priced 22% below actuarial need, 18% below market)",
+      "Identifies that the 15% cap means Urban <25 needs at least 2 pricing cycles to correct",
+      "Notes that being below market average reduces churn risk for price increases",
+      "Provides a sequenced multi-year plan not just a single-year fix",
+      "Quantifies approximate combined ratio improvement from each action"
+    ],
+    "gold_output": "SAFEGUARD INSURANCE — PRICING REFORM PLAN\n\nPRIORITY SEQUENCING:\n\nYEAR 1 — IMMEDIATE (Highest Impact):\n1. Urban drivers <25: Apply maximum 15% increase. Currently 22% below actuarial need — this gets ~68% of the way to correct pricing. Also 18% below market, so churn risk is low. Est. combined ratio improvement: -4 to -5 points.\n2. Suburban drivers <25: Apply 11% increase (full correction in one cycle). 9% below market — low churn risk. Est. improvement: -1.5 points.\n\nYEAR 2:\n3. Urban drivers <25 (second cycle): Apply remaining ~8% increase to complete correction.\n4. Urban drivers 25-45: Apply 4% increase to close actuarial gap.\nEst. combined ratio improvement Year 2: -2 to -3 points.\n\nNO ACTION REQUIRED:\n- Suburban 25-45 and Rural: Already priced above actuarial need. Maintain or modestly reduce to protect retention.\n\nPROJECTED OUTCOME:\nYear 1: Combined ratio ~103% (from 108%)\nYear 2: Combined ratio ~98-99%\nYear 3 (with expense initiatives): ~95% target achievable\n\nKEY RISK: Urban <25 is a high-loss segment where competitors are also below market — monitor for competitor reactions.",
+    "difficulty": "hard",
+    "estimated_minutes": 25
+  }
+]

@@ -1,0 +1,30 @@
+name: apex
+version: "1.0.0"
+description: |
+  APEX Professional Tasks Environment for training agents on
+  investment banking, management consulting, and corporate law tasks.
+  Targets the Mercor APEX-Agents benchmark.
+
+author: OpenENV Hackathon
+license: MIT
+
+environment:
+  class: server.apex_environment.APEXEnvironment
+  action: models.APEXAction
+  observation: models.APEXObservation
+
+server:
+  port: 8000
+  max_concurrent_envs: 4
+
+data:
+  scenarios_dir: data/
+  categories:
+    - banking
+    - consulting
+    - law
+
+dependencies:
+  - openenv-core
+  - groq
+  - pydantic
