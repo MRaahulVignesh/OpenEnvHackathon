@@ -118,7 +118,7 @@ def rollout_func(prompts: list, trainer: GRPOTrainer) -> dict:
         outputs = generate_rollout_completions(
             trainer,
             [real_prompt] * NUM_GENERATIONS,
-            max_new_tokens=MAX_NEW_TOKENS,
+            #max_new_tokens=MAX_NEW_TOKENS,
         )
 
         # score each completion through the env
@@ -136,7 +136,7 @@ def rollout_func(prompts: list, trainer: GRPOTrainer) -> dict:
     return {
         "prompt_ids":     [o["prompt_ids"]     for o in outputs],
         "completion_ids": [o["completion_ids"] for o in outputs],
-        "logprobs":       [o["logprobs"]       for o in outputs],
+        "logprobs": [[(lp, tid) for lp, tid in zip(o["logprobs"], o["completion_ids"])] for o in outputs],
         "env_reward":     rewards,
     }
 
@@ -168,6 +168,7 @@ trainer = GRPOTrainer(
         use_vllm=USE_VLLM,
         vllm_mode=VLLM_MODE,
         seed=SEED,
+        max_completion_length=MAX_NEW_TOKENS,
         report_to="none",
         gradient_checkpointing=True
     ),
