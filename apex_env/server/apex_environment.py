@@ -159,7 +159,7 @@ class APEXEnvironment(Environment):
         )
         self._reset_rubric()
 
-        return APEXObservation(
+        obs = APEXObservation(
             scenario_id = self._current["id"],
             category    = self._current["category"],
             world       = self._current["world"],
@@ -168,6 +168,8 @@ class APEXEnvironment(Environment):
             done        = False,
             reward      = None,
         )
+        print("Reset complete")
+        return obs
 
     def step(
         self,
