@@ -180,7 +180,7 @@ EVAL_MODEL=Qwen2.5-1.5B-Instruct_v14 python training/baseline_eval.py
 ## Key `.env` Parameters
 
 ```bash
-MODEL_NAME=Qwen/Qwen2.5-1.5B-Instruct
+BASE_MODEL=Qwen/Qwen2.5-1.5B-Instruct
 JUDGE_MODEL=Qwen/Qwen2.5-7B-Instruct
 MODELS_FOLDER=./models
 DATA_DIR=apex_env/data

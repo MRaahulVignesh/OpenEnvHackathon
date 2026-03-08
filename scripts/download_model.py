@@ -8,10 +8,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from huggingface_hub import snapshot_download
 
-
-# Load .env from project root
-env_path = Path(__file__).parent.parent / ".env"
-load_dotenv(env_path)
+load_dotenv()
 
 
 def download_model(hf_model_id: str, model_type: str = "model") -> str:
@@ -49,8 +46,11 @@ def download_model(hf_model_id: str, model_type: str = "model") -> str:
 
 
 def main():
-    base_model_id = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-1.5B-Instruct")
-    judge_model_id = os.getenv("JUDGE_MODEL", "Qwen/Qwen2.5-7B-Instruct")
+    base_model_id = os.getenv("BASE_MODEL")
+    judge_model_id = os.getenv("JUDGE_MODEL")
+
+    if base_model_id is None:
+        raise Exception("")
 
     if len(sys.argv) > 1:
         base_model_id = sys.argv[1]

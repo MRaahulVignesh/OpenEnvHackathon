@@ -37,7 +37,7 @@ from apex_env.client import APEXClient
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
-MODEL_NAME      = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-1.5B-Instruct")
+BASE_MODEL      = os.getenv("BASE_MODEL", "Qwen/Qwen2.5-1.5B-Instruct")
 MODELS_FOLDER   = os.getenv("MODELS_FOLDER", "./models")
 ENV_URL         = os.getenv("ENV_URL", "http://localhost:8000")
 DATA_DIR        = os.getenv("DATA_DIR", "apex_env/data")
@@ -52,13 +52,13 @@ LOGGING_STEPS  = int(os.getenv("LOGGING_STEPS", "1"))
 SEED           = int(os.getenv("SEED", "42"))
 BF16           = os.getenv("BF16", "true").lower() == "true"
 
-if "/" in MODEL_NAME:
-    MODEL_SHORT_NAME = MODEL_NAME.split("/")[-1]
+if "/" in BASE_MODEL:
+    MODEL_SHORT_NAME = BASE_MODEL.split("/")[-1]
     MODEL_PATH = str(Path(MODELS_FOLDER) / "base_model" / MODEL_SHORT_NAME)
 else:
-    MODEL_SHORT_NAME = MODEL_NAME
-    ft = Path(MODELS_FOLDER) / "fine_tuned" / MODEL_NAME
-    MODEL_PATH = str(ft if ft.exists() else Path(MODELS_FOLDER) / "base_model" / MODEL_NAME)
+    MODEL_SHORT_NAME = BASE_MODEL
+    ft = Path(MODELS_FOLDER) / "fine_tuned" / BASE_MODEL
+    MODEL_PATH = str(ft if ft.exists() else Path(MODELS_FOLDER) / "base_model" / BASE_MODEL)
 
 def get_next_version(base: Path, name: str) -> str:
     (base / "fine_tuned").mkdir(parents=True, exist_ok=True)
@@ -255,6 +255,6 @@ if __name__ == "__main__":
         trainer.train()
         trainer.save_model(OUTPUT_DIR)
         print(f"\n✅  Saved to: {OUTPUT_DIR}")
-        print(f"    Next run: MODEL_NAME={Path(OUTPUT_DIR).name}")
+        print(f"    Next run: BASE_MODEL={Path(OUTPUT_DIR).name}")
     finally:
         apex_client.__exit__(None, None, None)

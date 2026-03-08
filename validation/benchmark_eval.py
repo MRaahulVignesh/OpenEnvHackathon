@@ -21,7 +21,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path)
 
-EVAL_MODEL    = os.getenv("EVAL_MODEL", os.getenv("MODEL_NAME", "Qwen/Qwen2.5-1.5B-Instruct"))
+EVAL_MODEL    = os.getenv("EVAL_MODEL", os.getenv("BASE_MODEL", "Qwen/Qwen2.5-1.5B-Instruct"))
 JUDGE_MODEL   = os.getenv("JUDGE_MODEL", "Qwen/Qwen2.5-14B-Instruct")
 MODELS_FOLDER = os.getenv("MODELS_FOLDER", "./models")
 DATA_DIR      = os.getenv("DATA_DIR", "apex_env/data")
