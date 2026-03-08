@@ -164,14 +164,54 @@ def reward_fn(completions, scenario_id=None, **kwargs):
                 if not isinstance(obs_data, dict):
                     obs_data = {}
 
-            reasoning = obs_data.get("reasoning", "")
-            criteria  = f"{obs_data.get('criteria_met', '?')}/{obs_data.get('criteria_total', '?')}"
+            reasoning        = obs_data.get("reasoning", "")
+            criteria_met     = obs_data.get("criteria_met", "?")
+            criteria_total   = obs_data.get("criteria_total", "?")
+            criteria         = f"{criteria_met}/{criteria_total}"
+            difficulty       = obs_data.get("difficulty", "?")
+            base_reward      = obs_data.get("base_reward", "?")
+            gold_score       = obs_data.get("gold_score", "?")
+            peer_reward      = obs_data.get("peer_reward", "?")
+            noise_injected   = obs_data.get("noise_injected", False)
+            noise_detected   = obs_data.get("noise_detected", False)
+            citation_bonus   = obs_data.get("citation_bonus", 0.0)
+            file_citations   = obs_data.get("file_citations", [])
+            figure_citations = obs_data.get("figure_citations", [])
+            tier_status      = obs_data.get("tier_status", {})
 
         except Exception as e:
             print(f"  ⚠ Env error [{sid}]: {e}")
-            reward, reasoning, criteria = 0.0, "", "?/?"
+            reward = 0.0
+            reasoning = criteria = difficulty = ""
+            base_reward = gold_score = peer_reward = citation_bonus = 0.0
+            noise_injected = noise_detected = False
+            file_citations = figure_citations = []
+            tier_status = {}
 
-        print(f"  ✓ [{sid}] reward={reward:.4f} criteria={criteria} | {reasoning[:60]}")
+        # ── Rich training log ─────────────────────────────────────────────────
+        noise_str    = ""
+        if noise_injected:
+            noise_str = f"  💉 noise={'✓ detected' if noise_detected else '✗ missed'}"
+
+        citation_str = ""
+        if citation_bonus and float(citation_bonus) > 0:
+            all_cites = list(file_citations or []) + list(figure_citations or [])
+            citation_str = f"  📎 citations={all_cites[:4]} +{float(citation_bonus):.2f}"
+
+        tier_str = ""
+        if tier_status:
+            tier_str = "  tiers: " + " | ".join(f"{k}={v}" for k, v in tier_status.items())
+
+        print(
+            f"\n  ┌─ [{sid}] ({difficulty})"
+            f"\n  │  rubric : {criteria} criteria met"
+            f"\n  │  scores : base={float(base_reward):.2f}  gold={float(gold_score):.2f}  peer={float(peer_reward):.2f}  citation=+{float(citation_bonus):.2f}"
+            f"\n  │  final  : {reward:.4f}"
+            + (f"\n  │  noise  : {'injected + detected ✓' if noise_detected else 'injected, missed ✗' if noise_injected else 'none'}" if noise_injected else "")
+            + (f"\n  │  cites  : {list(file_citations or []) + list(figure_citations or [])[:4]}" if citation_bonus and float(citation_bonus) > 0 else "")
+            + (f"\n  │  judge  : {reasoning[:80]}" if reasoning else "")
+            + (f"\n  └─ {tier_str}" if tier_str else "  └─")
+        )
         rewards.append(reward)
 
     return rewards

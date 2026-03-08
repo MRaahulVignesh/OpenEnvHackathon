@@ -306,12 +306,12 @@ class APEXEnvironment(Environment):
         if avg >= ESCALATE_THRESHOLD and current_idx < len(TIER_ORDER) - 1:
             new_tier = TIER_ORDER[current_idx + 1]
             self.current_tier[category] = new_tier
-            print(f"  ↑ [{category}] Escalating to {new_tier} (rolling avg={avg:.2f})")
+            print(f"  ↑  DIFFICULTY UP   [{category}] {current} → {new_tier}  (avg={avg:.2f})")
 
         elif avg <= DEESCALATE_THRESHOLD and current_idx > 0:
             new_tier = TIER_ORDER[current_idx - 1]
             self.current_tier[category] = new_tier
-            print(f"  ↓ [{category}] De-escalating to {new_tier} (rolling avg={avg:.2f})")
+            print(f"  ↓  DIFFICULTY DOWN [{category}] {current} → {new_tier}  (avg={avg:.2f})")
 
     def _pick_scenario(self, category: Optional[str] = None, scenario_id: Optional[str] = None) -> dict:
         """Pick next scenario based on difficulty tier, or by explicit scenario_id."""
@@ -349,7 +349,7 @@ class APEXEnvironment(Environment):
         scenario_id: Optional[str] = None,
         **kwargs,
     ) -> APEXObservation:
-        print("In Reset")
+        print(f"\n  ══ RESET ════════════════════════════════════")
         if seed is not None:
             random.seed(seed)
 
@@ -359,7 +359,9 @@ class APEXEnvironment(Environment):
         if scenario.get("difficulty") == "hard":
             scenario, self._noise_injected = _inject_noise(scenario)
             if self._noise_injected:
-                print(f"  ⚡ Noise injected into [{scenario['id']}]")
+                sid_ = scenario["id"]
+                spec_ = NOISE_INJECTIONS.get(sid_, {})
+                print(f"  💉 Noise injected  : {spec_.get('file', '?')}  ({spec_.get('original', '?')!r} → {spec_.get('injected', '?')!r})")
         else:
             self._noise_injected = False
 
@@ -382,7 +384,12 @@ class APEXEnvironment(Environment):
             noise_injected   = self._noise_injected,
             tier_status      = {cat: self.current_tier[cat] for cat in self.current_tier},
         )
-        print(f"  Reset complete [{self._current['id']} | {self._current.get('difficulty')} | noise={self._noise_injected}]")
+        noise_label = "injected" if self._noise_injected else "clean"
+        tiers_str = " | ".join(f"{k}={v}" for k,v in self.current_tier.items())
+        print(f"  scenario : {self._current['id']} ({self._current.get('difficulty', '?')})")
+        print(f"  category : {self._current['category']}")
+        print(f"  noise    : {noise_label}")
+        print(f"  tiers    : {tiers_str}")
         return obs
 
     def step(
@@ -391,7 +398,7 @@ class APEXEnvironment(Environment):
         timeout_s: Optional[float] = None,
         **kwargs,
     ) -> APEXObservation:
-        print("In Step")
+        print(f"\n  ── STEP ───────────────────────────────────────")
         if self._current is None:
             raise RuntimeError("Call reset() before step()")
 
@@ -412,7 +419,10 @@ class APEXEnvironment(Environment):
         peer_reward  = round(0.5 + (delta / 2.0), 4)
         # Blend: 60% peer + 40% absolute rubric
         blended_reward = round(0.6 * peer_reward + 0.4 * base_reward, 4)
-        print(f"  📊 base={base_reward:.2f} gold={gold_score:.2f} peer={peer_reward:.2f} blended={blended_reward:.2f}")
+        print(f"  base_reward : {base_reward:.4f}  (rubric {scored['criteria_met']}/{scored['criteria_total']})")
+        print(f"  gold_score  : {gold_score:.4f}  (reference)")
+        print(f"  peer_reward : {peer_reward:.4f}  (delta={base_reward - gold_score:+.2f})")
+        print(f"  blended     : {blended_reward:.4f}  (0.6×peer + 0.4×base)")
 
         # ── Noise detection bonus ─────────────────────────────────────────────
         noise_bonus = 0.0
@@ -420,19 +430,22 @@ class APEXEnvironment(Environment):
             detected = _detect_noise(action.response, self._current["id"])
             if detected:
                 noise_bonus = 0.2
-                print(f"  ✓ Agent detected injected noise (+{noise_bonus})")
+                print(f"  noise       : detected ✓  +{noise_bonus} bonus")
             else:
-                print(f"  ✗ Agent missed injected noise")
+                print(f"  noise       : missed  ✗  no bonus")
 
         # ── Citation reward ───────────────────────────────────────────────────
         citation      = compute_citation_bonus(action.response, self._current)
         citation_bonus = citation.bonus
         if citation_bonus > 0:
-            print(f"  📎 Citation bonus +{citation_bonus:.2f} "
-                  f"(files={citation.file_citations}, figures={citation.figure_citations[:3]})")
+            print(f"  citation    : +{citation_bonus:.4f}  files={citation.file_citations}  figures={citation.figure_citations[:3]}")
 
         # ── Final reward ──────────────────────────────────────────────────────
         final_reward = min(1.0, blended_reward + noise_bonus + citation_bonus)
+
+        print(f"  ─────────────────────────────────────────────")
+        print(f"  FINAL REWARD : {final_reward:.4f}")
+        print(f"  ═════════════════════════════════════════════")
 
         # ── Update difficulty tier ────────────────────────────────────────────
         self._update_tier(category, final_reward)
