@@ -25,6 +25,7 @@ Usage:
 import os
 import sys
 from pathlib import Path
+from typing import Optional
 from dotenv import load_dotenv
 from huggingface_hub import snapshot_download
 
@@ -34,7 +35,7 @@ env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path)
 
 
-def download_model(hf_model_id: str | None = None):
+def download_model(hf_model_id: Optional[str] = None):
     """
     Download a Hugging Face model repository to a local directory.
     Saves to models/base_model/ folder.
