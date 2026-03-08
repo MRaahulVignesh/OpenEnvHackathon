@@ -1,6 +1,5 @@
 """
-Data models for the APEX Professional Tasks Environment.
-Extends OpenENV's base Action and Observation types.
+Data models for the APEX Professional Tasks Environment
 """
 
 from typing import Optional

@@ -1,13 +1,10 @@
 """
 APEX Environment - Entry Point
-
-Run the server:
-  python main.py
-  python main.py --port 8080
 """
 import os
 import uvicorn
 import argparse
+
 from dotenv import load_dotenv
 load_dotenv()
 

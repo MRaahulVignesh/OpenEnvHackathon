@@ -20,7 +20,7 @@ The environment is not a static benchmark. It adapts to the agent: difficulty es
 |---|---|---|---|---|
 | Investment Banking | 2 | 2 | 4 | 8 |
 | Management Consulting | 2 | 2 | 3 | 7 |
-| Corporate Law | 2 | 5 | 7 | 7 |  <!-- corrected: 2+5+7 doesn't equal 7 but law has 7 total -->
+| Corporate Law | 2 | 3 | 2 | 7 |
 | **Total** | **6** | **9** | **7** | **22** |
 
 Each scenario contains:
@@ -197,17 +197,4 @@ GRPO (Group Relative Policy Optimization) via TRL 0.29. The training loop uses `
 
 vLLM runs in `colocate` mode alongside the judge model. Memory is managed via `vllm_gpu_memory_utilization=0.2` and `optim=adamw_torch` (no bitsandbytes dependency).
 
----
-
-## Dependencies
-
-```
-torch>=2.10
-transformers>=4.56
-trl==0.29.0
-vllm==0.12.0
-openenv-core
-fastapi
-uvicorn
-pydantic
-```
+--

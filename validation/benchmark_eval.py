@@ -1,16 +1,6 @@
 #!/usr/bin/env python3
 """
-baseline_eval.py — Baseline Evaluation for APEX Environment
-
-Evaluates a model against all APEX scenarios using Qwen 2.5 14B as LLM-as-Judge.
-Saves results to baseline_results.json for comparison after training.
-
-Usage:
-    # Evaluate base model
-    EVAL_MODEL=Qwen/Qwen2.5-1.5B-Instruct python training/baseline_eval.py
-
-    # Evaluate fine-tuned model
-    EVAL_MODEL=Qwen2.5-1.5B-Instruct_v14 python training/baseline_eval.py
+Evaluation script that gives out the benchmark for the desired model on the Apex Dataset
 """
 
 import os
@@ -441,16 +431,3 @@ print(f"Judge: {worst['reasoning']}")
 print()
 
 
-# ============================================================
-# NEXT STEPS
-# ============================================================
-print("=" * 60)
-print("NEXT STEPS")
-print("=" * 60)
-print("  1. Note your avg score above")
-print("  2. Train:  python training/train_grpo.py")
-print("  3. Set EVAL_MODEL=<fine-tuned-name> in .env")
-print("  4. Re-run: python training/baseline_eval.py")
-print("  5. Compare the two eval_results_*.json files")
-print()
-print("✅ Done!")

@@ -1,20 +1,5 @@
 """
 APEX Environment Client
-
-Uses openenv's GenericEnvClient with .sync() wrapper for synchronous use.
-This is what your GRPO training loop imports.
-
-Usage:
-    from client import APEXClient
-
-    with APEXClient("http://localhost:8000") as client:
-        obs    = client.reset()
-        print(obs["prompt"])
-
-        result = client.step("My professional analysis...")
-        print(result.reward)                        # 0.0 – 1.0
-        print(result.observation["criteria_met"])
-        print(result.observation["reasoning"])
 """
 from openenv.core.generic_client import GenericEnvClient
 class APEXClient:

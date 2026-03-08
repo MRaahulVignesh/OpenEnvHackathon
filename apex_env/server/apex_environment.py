@@ -1,8 +1,6 @@
 """
-APEX Professional Tasks Environment
+Reinforcement Learning Environment using OpenEnv standard
 
-Extends openenv.core Environment to train agents on investment banking,
-management consulting, and corporate law tasks.
 
 Features:
   - Difficulty progression: tracks rolling avg reward per category (last 5 episodes)
@@ -53,7 +51,7 @@ NOISE_INJECTIONS = {
     "bank_004": {
         "file":          "company_financials.txt" if "company_financials.txt" in [] else "company_overview.txt",
         "original":      "Revenue",
-        "injected":      None,  # will be skipped if original not found — safe fallback
+        "injected":      None,  
         "flag_keywords": ["revenue discrepancy", "revenue inconsistency", "conflicting revenue"],
     },
     "bank_006": {
