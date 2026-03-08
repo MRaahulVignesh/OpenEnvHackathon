@@ -5,6 +5,7 @@ description = "APEX Professional Tasks Environment for RL training"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    # --- environment ---
     "openenv-core>=0.1.0",
     "fastapi>=0.115.0",
     "groq>=0.11.0",
@@ -13,16 +14,28 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "uvicorn>=0.32.0",
     "taskipy>=1.14.0",
-    "trl>=0.29.0",             # RL training library
-    "transformers>=5.3.0",     # HuggingFace Transformers (modern)
-    "datasets>=4.6.1",
-    "accelerate>=1.13.0",
-    "peft>=0.18.1",
-    "torch>=2.10.0",
-    # vLLM installed manually to avoid conflicts
-    # pip install vllm>=0.13.0
+
+    # --- training stack (pinned for compatibility) ---
+    "torch==2.10.0",
+    "torchvision==0.25.0",          # must match torch 2.10.0
+    "transformers==4.51.3",         # trl 0.29 requires transformers<5
+    "trl==0.29.0",
+    "peft==0.15.0",
+    "accelerate==1.6.0",
+    "datasets==3.6.0",
+
+    # vLLM installed manually after uv sync to avoid conflicts:
+    # .venv/bin/pip install vllm==0.12.0
 ]
 
 [tool.taskipy.tasks]
 serve = "python main.py"
 test = "python -m pytest test/ -v"
+
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "https://download.pytorch.org/whl/cu128" }
+torchvision = { index = "https://download.pytorch.org/whl/cu128" }
