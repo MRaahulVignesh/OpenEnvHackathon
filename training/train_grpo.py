@@ -82,6 +82,9 @@ def get_next_model_version(base_path: Path, model_name: str) -> str:
 
 OUTPUT_DIR = get_next_model_version(Path(MODELS_FOLDER), MODEL_SHORT_NAME)
 
+# Ensure output directory exists with proper permissions
+Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+
 # Training hyperparameters
 PER_DEVICE_TRAIN_BATCH_SIZE = int(os.getenv("PER_DEVICE_TRAIN_BATCH_SIZE", "2"))
 GRADIENT_ACCUMULATION_STEPS = int(os.getenv("GRADIENT_ACCUMULATION_STEPS", "4"))
