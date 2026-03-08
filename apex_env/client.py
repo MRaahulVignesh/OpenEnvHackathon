@@ -27,12 +27,12 @@ class APEXClient:
 
     def __exit__(self, *args):
         self._sync_client.close()
-
-    def reset(self, seed=None, episode_id=None) -> dict:
+        
+    def reset(self, seed=None, episode_id=None, scenario_id=None) -> dict:  # ← ADD scenario_id
         print("Resetting...")
-        result = self._sync_client.reset(seed=seed, episode_id=episode_id)
+        result = self._sync_client.reset(seed=seed, episode_id=episode_id, scenario_id=scenario_id)  # ← PASS IT
         print("Completed Resetting...")
-        return result.observation    # StepResult.observation is a dict
+        return result.observation
 
     def step(self, response: str):
         print("Setting...")

@@ -135,24 +135,27 @@ class APEXEnvironment(Environment):
 
     def reset(
         self,
-        seed:       Optional[int] = None,
-        episode_id: Optional[str] = None,
+        seed:        Optional[int] = None,
+        episode_id:  Optional[str] = None,
+        scenario_id: Optional[str] = None,   # ← ADD THIS
         **kwargs,
     ) -> APEXObservation:
-        """
-        Start a new episode. Picks the next scenario and returns it.
-        """
         print("In Reset")
         if seed is not None:
             random.seed(seed)
 
-        # Refill queue when empty
-        if not self._queue:
-            self._queue = self.scenarios.copy()
-            if self.shuffle:
-                random.shuffle(self._queue)
+        if scenario_id is not None:                                          
+            matched = next((s for s in self.scenarios if s["id"] == scenario_id), None) 
+            if matched is None:                                             
+                raise ValueError(f"scenario_id '{scenario_id}' not found")
+            self._current = matched                                         
+        else:                                                              
+            if not self._queue:
+                self._queue = self.scenarios.copy()
+                if self.shuffle:
+                    random.shuffle(self._queue)
+            self._current = self._queue.pop()
 
-        self._current = self._queue.pop()
         self._state   = State(
             episode_id = episode_id or str(uuid4()),
             step_count = 0
