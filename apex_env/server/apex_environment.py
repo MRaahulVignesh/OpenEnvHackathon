@@ -11,6 +11,7 @@ Features:
     plausible but incorrect figure; rewards agent for detecting it
   - Returns reward breakdown: base rubric score + noise detection bonus
   - Peer comparison reward: agent scored relative to gold output (cached per scenario)
+  - Citation reward: bonus for grounding response in workspace file names and figures
 """
 
 import json
@@ -25,6 +26,7 @@ from openenv.core.env_server.interfaces import Environment
 from openenv.core.env_server.types import State, EnvironmentMetadata
 
 from apex_env.server.scorer import RLScorer
+from apex_env.server.citation_reward import compute_citation_bonus
 from apex_env.models import APEXAction, APEXObservation
 
 
@@ -422,8 +424,15 @@ class APEXEnvironment(Environment):
             else:
                 print(f"  ✗ Agent missed injected noise")
 
+        # ── Citation reward ───────────────────────────────────────────────────
+        citation      = compute_citation_bonus(action.response, self._current)
+        citation_bonus = citation.bonus
+        if citation_bonus > 0:
+            print(f"  📎 Citation bonus +{citation_bonus:.2f} "
+                  f"(files={citation.file_citations}, figures={citation.figure_citations[:3]})")
+
         # ── Final reward ──────────────────────────────────────────────────────
-        final_reward = min(1.0, blended_reward + noise_bonus)
+        final_reward = min(1.0, blended_reward + noise_bonus + citation_bonus)
 
         # ── Update difficulty tier ────────────────────────────────────────────
         self._update_tier(category, final_reward)
@@ -448,6 +457,9 @@ class APEXEnvironment(Environment):
             gold_score       = gold_score,
             peer_reward      = peer_reward,
             blended_reward   = blended_reward,
+            citation_bonus   = citation_bonus,
+            file_citations   = citation.file_citations,
+            figure_citations = citation.figure_citations,
             tier_status      = {cat: self.current_tier[cat] for cat in self.current_tier},
             metadata         = {
                 "difficulty": self._current["difficulty"],

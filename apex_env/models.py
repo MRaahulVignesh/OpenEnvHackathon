@@ -43,6 +43,11 @@ class APEXObservation(Observation):
     noise_injected: bool = Field(default=False, description="Whether noise was injected this episode")
     noise_detected: bool = Field(default=False, description="Whether agent flagged the noise")
 
+    # ── Citation reward ────────────────────────────────────────────────────────
+    citation_bonus:   float     = Field(default=0.0, description="Bonus for grounding response in workspace files (max 0.15)")
+    file_citations:   list[str] = Field(default=[], description="Workspace filenames mentioned in response")
+    figure_citations: list[str] = Field(default=[], description="Workspace figures quoted in response")
+
     # ── Difficulty progression ─────────────────────────────────────────────────
     tier_status: dict = Field(
         default_factory=dict,
