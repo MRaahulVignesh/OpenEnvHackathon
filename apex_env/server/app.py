@@ -12,8 +12,8 @@ Uses openenv.core's create_app() which auto-generates all endpoints:
 """
 
 from openenv.core.env_server.http_server import create_app
-from apex_env.models import APEXAction, APEXObservation
-from apex_env.server.apex_environment import APEXEnvironment
+from apex_env.server.models import APEXAction, APEXObservation
+from apex_env.server.environment import APEXEnvironment
 from apex_env.server.scorer import RLScorer
 
 print("Initializing RLScorer...")

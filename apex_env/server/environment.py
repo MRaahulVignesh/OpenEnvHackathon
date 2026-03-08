@@ -25,7 +25,7 @@ from openenv.core.env_server.types import State, EnvironmentMetadata
 
 from apex_env.server.scorer import RLScorer
 from apex_env.server.citation_reward import compute_citation_bonus
-from apex_env.models import APEXAction, APEXObservation
+from apex_env.server.models import APEXAction, APEXObservation
 
 
 # ── Difficulty thresholds ──────────────────────────────────────────────────────
