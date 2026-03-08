@@ -67,6 +67,7 @@ Respond ONLY with valid JSON, no other text:
                 "reasoning":       result.get("reasoning", "")
             }
         except Exception as e:
+            print(e)
             return {
                 "criteria_scores": [0] * n,
                 "criteria_met":    0,
