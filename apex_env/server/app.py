@@ -15,13 +15,25 @@ Run locally:
 
 Or via Docker (see Dockerfile in project root).
 """
+from functools import partial
 from openenv.core.env_server.http_server import create_app
 from apex_env.models import APEXAction, APEXObservation
 from apex_env.server.apex_environment import APEXEnvironment
+from apex_env.server.scorer import RLScorer
 
+
+# Initialize scorer once (loads vLLM model)
+print("Initializing RLScorer...")
+scorer = RLScorer()
+print("✓ RLScorer initialized")
+
+# Create environment factory with scorer injected
+def create_apex_environment(**kwargs):
+    """Factory function to create APEXEnvironment with scorer."""
+    return APEXEnvironment(scorer=scorer, **kwargs)
 
 app = create_app(
-    APEXEnvironment,
+    create_apex_environment,
     APEXAction,
     APEXObservation,
     env_name           = "apex",

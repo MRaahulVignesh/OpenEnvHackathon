@@ -36,10 +36,9 @@ class APEXClient:
 
     def step(self, response: str):
         print("Setting...")
-        step = self._sync_client.step({"response": response})
+        result = self._sync_client.step({"response": response})
         print("Completed Setting...")
-        return 
-        # returns StepResult with .reward, .done, .observation
+        return result
 
     def close(self):
         self._sync_client.close()

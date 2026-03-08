@@ -8,11 +8,12 @@ APEX-Agents benchmark.
 The environment:
   - Loads 22 professional scenarios from data/
   - Serves one scenario per episode via reset()
-  - Scores agent responses against rubrics via Groq LLM judge
+  - Scores agent responses against rubrics via local vLLM judge
   - Returns reward = fraction of rubric criteria met (0.0 – 1.0)
 """
 
 import json
+import os
 import random
 from pathlib import Path
 from typing import Optional
@@ -20,7 +21,7 @@ from uuid import uuid4
 from openenv.core.env_server.interfaces import Environment
 from openenv.core.env_server.types import State, EnvironmentMetadata
 
-from apex_env.server.llm_judge import LLMJudge
+from apex_env.server.scorer import RLScorer
 from apex_env.models import APEXAction, APEXObservation
 
 
@@ -81,12 +82,25 @@ class APEXEnvironment(Environment):
 
     def __init__(
         self,
-        data_dir:        str           = "apex_env/data",
+        scorer:          RLScorer,
+        data_dir:        Optional[str] = None,
         category_filter: Optional[str] = None,
-        groq_api_key:    Optional[str] = None,
         shuffle:         bool          = True,
     ):
+        """
+        Initialize APEX Environment with a scorer.
+
+        Args:
+            scorer: RLScorer instance for scoring responses
+            data_dir: Path to data folder with scenarios (default: from DATA_DIR env var)
+            category_filter: Optional filter for specific category (default: from CATEGORY_FILTER env var)
+            shuffle: Whether to shuffle scenarios
+        """
         super().__init__()
+
+        # Read from environment variables if not provided
+        data_dir = data_dir or os.getenv("DATA_DIR", "apex_env/data")
+        category_filter = category_filter or os.getenv("CATEGORY_FILTER") or None
 
         # Load scenarios
         all_scenarios = _load_scenarios(data_dir)
@@ -98,7 +112,7 @@ class APEXEnvironment(Environment):
         self.scenarios       = all_scenarios
         self.category_filter = category_filter
         self.shuffle         = shuffle
-        self.judge           = LLMJudge(api_key=groq_api_key)
+        self.scorer          = scorer
 
         # Episode state
         self._state          = State(episode_id=str(uuid4()), step_count=0)
@@ -172,7 +186,7 @@ class APEXEnvironment(Environment):
         self._state.step_count  += 1
         self._scenarios_seen    += 1
 
-        scored = self.judge.score(self._current, action.response)
+        scored = self.scorer.score(self._current, action.response)
 
         obs = APEXObservation(
             scenario_id     = self._current["id"],

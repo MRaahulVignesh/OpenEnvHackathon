@@ -1,13 +1,17 @@
 """
-download_model.py — Download model from Hugging Face if not present locally.
+download_model.py — Download models from Hugging Face if not present locally.
 
-Downloads the model specified in .env (MODEL_NAME) into MODELS_FOLDER/base_model/.
-If the model already exists locally, the download is skipped.
+Downloads both:
+  1. Base model (MODEL_NAME) for training
+  2. Judge model (JUDGE_MODEL) for scoring
+
+into MODELS_FOLDER/base_model/. If models already exist locally, downloads are skipped.
 
 Directory Structure:
     models/
         base_model/          # Downloaded base models go here
             Qwen2.5-3B-Instruct/
+            Qwen2.5-7B-Instruct/
         fine_tuned/          # Fine-tuned models saved here by train_grpo.py
             Qwen2.5-3B-Instruct_v0/
             Qwen2.5-3B-Instruct_v1/
@@ -17,9 +21,6 @@ Requirements:
 
 Usage:
     python training/download_model.py
-
-    # or specify another model
-    python training/download_model.py Qwen/Qwen2.5-3B-Instruct
 """
 
 import os
@@ -35,27 +36,28 @@ env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path)
 
 
-def download_model(hf_model_id: Optional[str] = None):
+def download_model(hf_model_id: str, model_type: str = "model"):
     """
     Download a Hugging Face model repository to a local directory.
     Saves to models/base_model/ folder.
+
+    Args:
+        hf_model_id: Hugging Face model ID (e.g., "Qwen/Qwen2.5-3B-Instruct")
+        model_type: Description of model type for logging (e.g., "base", "judge")
+
+    Returns:
+        str: Local path to downloaded model
     """
-
-    # Read configuration
-    if hf_model_id is None:
-        hf_model_id = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-3B-Instruct")
-
     models_folder = os.getenv("MODELS_FOLDER", "./models")
-
     model_name = hf_model_id.split("/")[-1]
     local_path = Path(models_folder) / "base_model" / model_name
 
     # Skip download if model already exists
     if (local_path / "config.json").exists():
-        print(f"✓ Model already exists: {local_path}")
+        print(f"✓ {model_type.capitalize()} model already exists: {local_path}")
         return str(local_path)
 
-    print("📥 Downloading model")
+    print(f"📥 Downloading {model_type} model")
     print(f"   Hugging Face ID : {hf_model_id}")
     print(f"   Local path      : {local_path}")
     print()
@@ -75,14 +77,15 @@ def download_model(hf_model_id: Optional[str] = None):
         )
 
         print()
-        print("✅ Model downloaded successfully")
+        print(f"✅ {model_type.capitalize()} model downloaded successfully")
         print(f"   Location: {local_path}")
+        print()
 
         return str(local_path)
 
     except Exception as e:
         print()
-        print("❌ Error downloading model")
+        print(f"❌ Error downloading {model_type} model")
         print(e)
         print()
         print("Common issues:")
@@ -98,17 +101,53 @@ def download_model(hf_model_id: Optional[str] = None):
 
 
 if __name__ == "__main__":
+    print("=" * 60)
+    print("DOWNLOADING MODELS FOR APEX TRAINING")
+    print("=" * 60)
+    print()
 
-    hf_model_id = sys.argv[1] if len(sys.argv) > 1 else None
+    # Get model IDs from .env or command line
+    base_model_id = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-1.5B-Instruct")
+    judge_model_id = os.getenv("JUDGE_MODEL", "Qwen/Qwen2.5-7B-Instruct")
 
-    if hf_model_id:
-        print("📋 Using custom model")
-        print(f"   {hf_model_id}")
-        print()
+    # Allow override via command line
+    if len(sys.argv) > 1:
+        base_model_id = sys.argv[1]
+    if len(sys.argv) > 2:
+        judge_model_id = sys.argv[2]
 
+    print("📋 Configuration:")
+    print(f"   Base model  (for training) : {base_model_id}")
+    print(f"   Judge model (for scoring)  : {judge_model_id}")
+    print()
+
+    # Download base model
+    print("=" * 60)
+    print("1. DOWNLOADING BASE MODEL")
+    print("=" * 60)
+    download_model(base_model_id, model_type="base")
+
+    # Download judge model (skip if same as base model)
+    if judge_model_id != base_model_id:
+        print("=" * 60)
+        print("2. DOWNLOADING JUDGE MODEL")
+        print("=" * 60)
+        download_model(judge_model_id, model_type="judge")
     else:
-        print("📋 Using model from .env")
-        print(f"   MODEL_NAME={os.getenv('MODEL_NAME')}")
+        print("=" * 60)
+        print("2. JUDGE MODEL")
+        print("=" * 60)
+        print("✓ Judge model is same as base model (already downloaded)")
         print()
 
-    download_model(hf_model_id)
+    print("=" * 60)
+    print("✅ ALL MODELS READY")
+    print("=" * 60)
+    print()
+    print("Next steps:")
+    print("  1. Start the APEX server:")
+    print("     cd apex_env && uvicorn server.app:app --host 0.0.0.0 --port 8001")
+    print()
+    print("  2. Run training:")
+    print("     python training/train_grpo.py")
+    print()
