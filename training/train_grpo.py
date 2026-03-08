@@ -172,7 +172,7 @@ trainer = GRPOTrainer(
         vllm_mode=VLLM_MODE,
         seed=SEED,
         max_completion_length=MAX_NEW_TOKENS,
-        vllm_gpu_memory_utilization=0.4,
+        vllm_gpu_memory_utilization=0.3,
         report_to="none",
         gradient_checkpointing=True
     ),
